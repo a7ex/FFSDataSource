@@ -26,6 +26,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FA7E72D61E6D32580062671F /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		FA7E72D71E6D32630062671F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FAE757BD1E6B109100A27C23 /* FFSDataSource.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FFSDataSource.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAE757C01E6B109100A27C23 /* FFSDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFSDataSource.h; sourceTree = "<group>"; };
 		FAE757C11E6B109100A27C23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -62,6 +64,8 @@
 				FAE757BF1E6B109100A27C23 /* FFSDataSource */,
 				FAE757CA1E6B109100A27C23 /* FFSDataSourceTests */,
 				FAE757BE1E6B109100A27C23 /* Products */,
+				FA7E72D61E6D32580062671F /* LICENSE */,
+				FA7E72D71E6D32630062671F /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
