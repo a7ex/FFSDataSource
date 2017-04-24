@@ -6,6 +6,8 @@
 //  Copyright © 2017 Farbflash. All rights reserved.
 //
 
+import UIKit
+
 open class TDSVC: UIViewController, FFSDataSourceStorageVC {
     
     @IBOutlet open weak var tableView: UITableView?
@@ -162,3 +164,77 @@ extension TDSVC: UICollectionViewDelegate {
     }
 }
 
+// UITableView helpers
+public extension TDSVC {
+    
+    final func clearTableViewSelections() {
+        guard let tableView = tableView else { return }
+        clearTableViewSelections(of: tableView)
+    }
+    
+    final func clearTableViewSelections(of targetTableView: UITableView) {
+        if let selections = targetTableView.indexPathsForSelectedRows {
+            for thisIndexPath in selections {
+                targetTableView.deselectRow(at: thisIndexPath, animated: true)
+            }
+        }
+    }
+    
+    final func clearCollectionViewSelections() {
+        guard let collectionView = collectionView else { return }
+        clearCollectionViewSelections(of: collectionView)
+    }
+    
+    final func clearCollectionViewSelections(of targetCollectionView: UICollectionView) {
+        if let selections = targetCollectionView.indexPathsForSelectedItems {
+            for thisIndexPath in selections {
+                targetCollectionView.deselectItem(at: thisIndexPath, animated: true)
+            }
+        }
+    }
+    
+    func modelForViewInCell(_ viewInCell: UIView) -> TableDataItemModel? {
+        if let tableCell = enclosingTableViewCell(viewInCell) {
+            return modelForViewInTableViewCell(tableCell)
+        }
+        else if let _ = enclosingTableViewCell(viewInCell) {
+            return modelForViewInCollectionViewCell(viewInCell)
+        }
+        return nil
+    }
+    
+    func modelForViewInTableViewCell(_ tableCell: UITableViewCell) -> TableDataItemModel? {
+        if let dataSrc = dataSource(for: tableView),
+            let indexPath = tableCell.indexPath,
+            let model = dataSrc.model(at: indexPath) {
+            return model
+        }
+        return nil
+    }
+    
+    func modelForViewInCollectionViewCell(_ viewInCell: UIView) -> TableDataItemModel? {
+        if let cell = enclosingCollectionViewCell(viewInCell),
+            let dataSrc = dataSource(for: collectionView),
+            let indexPath = cell.indexPath,
+            let model = dataSrc.model(at: indexPath) {
+            return model
+        }
+        return nil
+    }
+    
+    func tableItemForViewInCell(_ viewInCell: UIView) -> TableDataSource.TableItem? {
+        if let tableCell = enclosingTableViewCell(viewInCell),
+            let dataSrc = dataSource(for: tableView),
+            let indexPath = tableCell.indexPath {
+            return dataSrc.item(at: indexPath)
+        }
+        return nil
+    }
+    
+    func indexPathOfCellWithView(_ viewInCell: UIView) -> IndexPath? {
+        if let tableCell = enclosingTableViewCell(viewInCell) {
+            return tableCell.indexPath
+        }
+        return nil
+    }
+}

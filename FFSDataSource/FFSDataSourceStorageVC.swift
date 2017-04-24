@@ -14,13 +14,13 @@ fileprivate extension UIView {
     }
 }
 
-fileprivate extension UITableViewCell {
+public extension UITableViewCell {
     var indexPath: IndexPath? {
         return nearestSuperview(ofType: UITableView.self)?.indexPath(for: self)
     }
 }
 
-fileprivate extension UICollectionViewCell {
+public extension UICollectionViewCell {
     var indexPath: IndexPath? {
         return nearestSuperview(ofType: UICollectionView.self)?.indexPath(for: self)
     }
