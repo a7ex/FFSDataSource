@@ -9,8 +9,9 @@
 import UIKit
 
 open class TDSVC: UIViewController, FFSDataSourceStorageVC {
-
+    // swiftlint:disable:next private_outlet
     @IBOutlet open weak var tableView: UITableView?
+    // swiftlint:disable:next private_outlet
     @IBOutlet open weak var collectionView: UICollectionView?
     public var geometrieAlreadySetup = false
 

@@ -37,7 +37,7 @@ class FFSDataSourceTests: XCTestCase {
 
         XCTAssert(tds.allItems.count == 1, "allItems.count must be 1")
         XCTAssert(tds.numberOfSections() == 1, "Number of sections must be 1")
-        XCTAssert(tds.models(by: "testId").count > 0, "DataSource must contain cell with elementId 'testId'")
+        XCTAssert(!tds.models(by: "testId").isEmpty, "DataSource must contain cell with elementId 'testId'")
         XCTAssert(tds.model(at: IndexPath(row: 0, section: 0)) != nil, "model at index 0 of 0 must exist")
 
         let tableItem = sec.addTableItem(with: CellSourceModel(cellIdentifier: "Cell2"))

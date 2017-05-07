@@ -11,7 +11,7 @@ import UIKit
 /**
  TableDataSource is a class to provide an object for UITableView datasources and delegates
  It can be used as MODEL for UITableViews and UICollectionViews, providing cell actions as closures
- 
+
  EXAMPLE:
  ```swift
  let dataSource = TableDataSource()
@@ -34,17 +34,17 @@ import UIKit
 fileprivate extension Array {
     /**
      Access elements of array without index out of range error
-     
+
      This method checks, whether the specified index in the array is within the bounds of the array
      and if NOT returns a default value, which can also be specified optionally
-     
+
      Example:
      print(myArray.valueAt(index: -2, "Not found"))
      -- "Not found"
-     
+
      - parameter index:        Integer zero-based index of element in array
      - parameter defaultValue: optional default value to return in case of out of bounds index (default = nil)
-     
+
      - returns: element of array at index position OR defaultValue (nil)
      */
     func item(at index: Int, defaultValue: Element?=nil) -> Element? {
@@ -112,15 +112,16 @@ open class TableDataSource {
 
     /**
      Add new leaf node to the datasource model
-     
+
      - parameter model: any object which acts as model for a single cell
      - parameter index: index where to insert the model or nil to append at the end
      - parameter section: section index where to insert model or nil to append at the currently last section
      - parameter action: block to be executed or nil
      - returns: newly created leaf node of class TableDataSource.TableItem
      */
-    @discardableResult open func addTableItem(with model: TableDataItemModel,
-                                              toSection section: Int?=nil) -> TableItem {
+    @discardableResult
+    open func addTableItem(with model: TableDataItemModel,
+                           toSection section: Int?=nil) -> TableItem {
 
         let cnt = sections.count
         var insertInSection = 0
@@ -142,8 +143,8 @@ open class TableDataSource {
     }
 
     open func insert(tableItem: TableItem,
-                                   atIndex index: Int?=nil,
-                                   inSection section: Int?=nil) {
+                     atIndex index: Int?=nil,
+                     inSection section: Int?=nil) {
         let cnt = sections.count
         var insertInSection = 0
 
@@ -165,12 +166,13 @@ open class TableDataSource {
 
     /**
      Add a section to the datasource model
-     
+
      - parameter title: A NSString to be used as the title of the section, if the property showSectionHeaders is YES
      - parameter index: section index where to insert model or nil to append at the currently last section
      - returns: newly created section object of class TableDataSource.TableSection
      */
-    @discardableResult open func addSection(with sectionData: TableDataItemModel?=nil, atIndex index: Int?=nil) -> TableSection {
+    @discardableResult
+    open func addSection(with sectionData: TableDataItemModel?=nil, atIndex index: Int?=nil) -> TableSection {
         var cnt = sections.count
         var newIndex = cnt
 
@@ -266,7 +268,7 @@ open class TableDataSource {
      - returns: section object of class TableDataSource.TableSection with title 'title' or nil
      */
     open func section(with elementId: String) -> TableSection? {
-        return (sections.filter { $0.sectionData?.elementId == elementId }).first
+        return sections.first(where: { $0.sectionData?.elementId == elementId })
     }
 
     /**
@@ -283,13 +285,13 @@ open class TableDataSource {
 
     /**
      Number of sections in datasource model
-     
+
      This can/should be used directly in the UITableView datasource method:
-     
+
      func numberOfSectionsInTableView(tableView:UITableView) {
      return <TableDataSourceInstance>.numberOfSectionsInTable()
      }
-     
+
      - returns: NSInteger
      */
     open func numberOfSections() -> Int {
@@ -298,13 +300,13 @@ open class TableDataSource {
 
     /**
      Number of row items for a given section
-     
+
      This can/should be used directly in the UITableView datasource method:
-     
+
      func tableView(tableView:UITableView, numberOfRowsInSection, section:Int) {
      return <TableDataSourceInstance>.numberOfTableItemsInSection(section)
      }
-     
+
      - parameter section: NSInteger for the section
      - returns: NSInteger
      */
@@ -330,10 +332,10 @@ open class TableDataSource {
 
     /**
      Get the height for a given row item
-     
+
      If the leaf model responds to selector 'height' that value will be used (defaults to 44.0)
      The selector 'height' must return a CGFloat
-     
+
      - parameter indexPath: The path to the row item
      - returns: The height of the row item
      */
@@ -356,7 +358,8 @@ open class TableDataSource {
      - parameter indexPath: The path to the item
      - returns: the removed object of class TableDataSource.TableItem or nil, if not found
      */
-    @discardableResult open func removeItem(at indexPath: IndexPath) -> TableItem? {
+    @discardableResult
+    open func removeItem(at indexPath: IndexPath) -> TableItem? {
         return section(at: indexPath.section)?.removeItem(at: indexPath.row)
     }
 
@@ -413,13 +416,13 @@ open class TableDataSource {
 
     /**
      Execute the selection action which was registered for a given row item
-     
+
      This can be used in the UITableView delegate method didSelectRowAtIndexPath like so:
-     
+
      func tableView(tableView:UITableView, didSelectRowAt indexPath:NSIndexPath) {
      <TableDataSourceInstance>.selectItemAt(indexPath)
      }
-     
+
      - parameter indexPath: The path to the row item
      */
     open func selectItem(at indexPath: IndexPath) {
@@ -428,13 +431,13 @@ open class TableDataSource {
 
     /**
      Execute the deselection action which was registered for a given row item
-     
+
      This can be used in the UITableView delegate method didDeselectRowAtIndexPath like so:
-     
+
      func tableView(tableView:UITableView, didDeselectRowAt indexPath:NSIndexPath) {
      <TableDataSourceInstance>.deselectItem(indexPath)
      }
-     
+
      - parameter indexPath: The path to the row item
      */
     open func deselectItem(at indexPath: IndexPath) {
@@ -469,14 +472,15 @@ open class TableDataSource {
 
         /**
          Create, add and return a new table cell source
-         
+
          - parameter model:  Any object to act as "payload"
          - parameter index:  optional index to insert this item to (if nil, the item will be appended to the end of the item list)
          - parameter action: closure to be executed on table cell selection AND deselection!
-         
+
          - returns: the newly created TableDataSource.TableItem, so that it can be further configured, if necessary
          */
-        @discardableResult open func addTableItem(with model: TableDataItemModel) -> TableItem {
+        @discardableResult
+        open func addTableItem(with model: TableDataItemModel) -> TableItem {
             let newIndex = tableItems.count
             let newItem = TableItem(with: model, at: tableItems.count, inSection: self.index)
             tableItems.insert(newItem, at: newIndex)
@@ -489,7 +493,7 @@ open class TableDataSource {
 
         /**
          Does the same as the above method, except, that it returns self in order to chain item creation
-         
+
          Example:
          let dataSrc = TableDataSource()
          dataSrc.addSection("First section")
@@ -497,21 +501,22 @@ open class TableDataSource {
          .addTableItemInChain "Second item in section 1")
          .addTableItemInChain "Third item in section 1")
          dataSrc.showSectionHeaders = true
-         
+
          - parameter model:  Any object to act as "payload"
          - parameter index:  optional index to insert this item to (if nil, the item will be appended to the end of the item list)
          - parameter action: optional closure to be executed on table cell selection AND deselection!
-         
+
          - returns: returns an instance of self, so that cell creation can be chained
          */
-        @discardableResult open func addTableItemInChain(with model: TableDataItemModel) -> TableSection {
+        @discardableResult
+        open func addTableItemInChain(with model: TableDataItemModel) -> TableSection {
             addTableItem(with: model)
             return self
         }
 
         /**
          Adds an already existsing TableItem to the section
-         
+
          - parameter newItem: an instance of TableDataSource.TableItem
          - parameter index:   optional index to insert this item to (if nil, the item will be appended to the end of the item list)
          */
@@ -551,7 +556,7 @@ open class TableDataSource {
          Get all items in section as array
          */
         open var allItems: [TableItem] {
-            return Array<TableItem>(tableItems)
+            return tableItems
         }
 
         func reIndexItems() {
@@ -573,7 +578,8 @@ open class TableDataSource {
             return tableItems.item(at: index)
         }
 
-        @discardableResult open func removeItem(at index: Int) -> TableItem? {
+        @discardableResult
+        open func removeItem(at index: Int) -> TableItem? {
             guard let retval = tableItems.item(at: index) else { return nil }
             tableItems.remove(at: index)
             reIndexItems()
@@ -584,7 +590,8 @@ open class TableDataSource {
             return item(at: index)?.model
         }
 
-        @discardableResult open func removeItem(with elementId: String) -> TableItem? {
+        @discardableResult
+        open func removeItem(with elementId: String) -> TableItem? {
             for i in stride(from: (tableItems.count - 1), through: 0, by: -1) {
                 let thisItem = tableItems[i]
                 if thisItem.model.elementId == elementId {
@@ -653,7 +660,7 @@ open class TableDataSource {
 /// However any other class or struct can be used as cell models, as long as they
 /// comply to protocol 'TableDataItemModel'
 ///
-/// Your specific use case decides, whether to use your own class/struct or 
+/// Your specific use case decides, whether to use your own class/struct or
 /// to subclass this class as your customized model
 ///
 open class CellSourceModel: CollapsableTableDataItemModel, ValidatableTableDataItemModel {
