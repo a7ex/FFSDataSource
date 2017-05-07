@@ -31,7 +31,7 @@ public protocol FFSDataSourceStorageVC: class {
 }
 
 public extension FFSDataSourceStorageVC {
-    
+
     /// Store the dataSource for a view
     ///
     /// - Parameters:
@@ -40,7 +40,7 @@ public extension FFSDataSourceStorageVC {
     func setDataSource(_ datasource: TableDataSource, forView targetView: UIView) {
         tableDataSources["\(targetView.hashValue)"] = datasource
     }
-    
+
     /// Retrieve the dataSource associated to a view
     ///
     /// - Parameter targetView: typically an instance of either UITableView or UICollectionView
@@ -49,7 +49,7 @@ public extension FFSDataSourceStorageVC {
         guard let targetView = targetView else { return nil }
         return tableDataSources["\(targetView.hashValue)"]
     }
-    
+
     /// From any view inside a UITableViewCell get the UITableViewCell object
     ///
     /// - Parameter viewInCell: any UIView subclass inside a UITableViewCell (or its subclass)
@@ -57,7 +57,7 @@ public extension FFSDataSourceStorageVC {
     func enclosingTableViewCell(_ viewInCell: UIView) -> UITableViewCell? {
         return viewInCell.nearestSuperview(ofType: UITableViewCell.self)
     }
-    
+
     /// From any view inside a UICollectionViewCell get the UICollectionViewCell object
     ///
     /// - Parameter viewInCell: any element inside a UICollectionViewCell (or its subclass)
@@ -65,7 +65,7 @@ public extension FFSDataSourceStorageVC {
     func enclosingCollectionViewCell(_ viewInCell: UIView) -> UICollectionViewCell? {
         return viewInCell.nearestSuperview(ofType: UICollectionViewCell.self)
     }
-    
+
     /// Get the model associated to a cell
     /// This is the model at the indexPath of the TableDataSource associated to
     /// the tableView or collectionView of the enclosed view
