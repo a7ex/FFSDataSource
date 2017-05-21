@@ -53,13 +53,13 @@ fileprivate extension Array {
 }
 
 public protocol TableDataItemModel {
-    var cellIdentifier: String { get }
-    var elementId: String { get }
-    var cellHeight: Double? { get }
-    var onSelect: TableDataSource.TableItemAction? { get }
-    var onDeselect: TableDataSource.TableItemAction? { get }
-    var configureTableViewCell: TableDataSource.TableViewCellConfiguration? { get }
-    var configureCollectionViewCell: TableDataSource.CollectionViewCellConfiguration? { get }
+    var cellIdentifier: String { get set }
+    var elementId: String { get set }
+    var cellHeight: Double? { get set }
+    var onSelect: TableDataSource.TableItemAction? { get set }
+    var onDeselect: TableDataSource.TableItemAction? { get set }
+    var configureTableViewCell: TableDataSource.TableViewCellConfiguration? { get set }
+    var configureCollectionViewCell: TableDataSource.CollectionViewCellConfiguration? { get set }
 }
 
 public protocol CollapsableTableDataItemModel: TableDataItemModel {

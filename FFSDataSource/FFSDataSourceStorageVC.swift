@@ -54,16 +54,16 @@ public extension FFSDataSourceStorageVC {
     ///
     /// - Parameter viewInCell: any UIView subclass inside a UITableViewCell (or its subclass)
     /// - Returns: Instance of UITableViewCell or nil, if nothing suitable was found
-    func enclosingTableViewCell(_ viewInCell: UIView) -> UITableViewCell? {
-        return viewInCell.nearestSuperview(ofType: UITableViewCell.self)
+    func enclosingTableViewCell(_ viewInCell: UIView?) -> UITableViewCell? {
+        return viewInCell?.nearestSuperview(ofType: UITableViewCell.self)
     }
 
     /// From any view inside a UICollectionViewCell get the UICollectionViewCell object
     ///
     /// - Parameter viewInCell: any element inside a UICollectionViewCell (or its subclass)
     /// - Returns: Instance of UICollectionViewCell or nil, if nothing suitable was found
-    func enclosingCollectionViewCell(_ viewInCell: UIView) -> UICollectionViewCell? {
-        return viewInCell.nearestSuperview(ofType: UICollectionViewCell.self)
+    func enclosingCollectionViewCell(_ viewInCell: UIView?) -> UICollectionViewCell? {
+        return viewInCell?.nearestSuperview(ofType: UICollectionViewCell.self)
     }
 
     /// Get the model associated to a cell
@@ -72,15 +72,15 @@ public extension FFSDataSourceStorageVC {
     ///
     /// - Parameter viewInCell: any UIView subclass inside a UITableViewCell (or its subclass)
     /// - Returns: the model corresponding to protocol 'TableDataItemModel'
-    func modelForViewInCell(_ viewInCell: UIView) -> TableDataItemModel? {
+    func modelForViewInCell(_ viewInCell: UIView?) -> TableDataItemModel? {
         if let tableCell = enclosingTableViewCell(viewInCell),
-            let dataSrc = dataSource(for: viewInCell.nearestSuperview(ofType: UITableView.self)),
+            let dataSrc = dataSource(for: viewInCell?.nearestSuperview(ofType: UITableView.self)),
             let indexPath = tableCell.indexPath,
             let model = dataSrc.model(at: indexPath) {
             return model
         }
         else if let tableCell = enclosingCollectionViewCell(viewInCell),
-            let dataSrc = dataSource(for: viewInCell.nearestSuperview(ofType: UICollectionView.self)),
+            let dataSrc = dataSource(for: viewInCell?.nearestSuperview(ofType: UICollectionView.self)),
             let indexPath = tableCell.indexPath,
             let model = dataSrc.model(at: indexPath) {
             return model
