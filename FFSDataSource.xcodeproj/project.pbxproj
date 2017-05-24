@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FAC92D2F1ED5D44500D6C015 /* FFSDataSource.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE757BD1E6B109100A27C23 /* FFSDataSource.framework */; };
 		FAE757C71E6B109100A27C23 /* FFSDataSource.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE757BD1E6B109100A27C23 /* FFSDataSource.framework */; };
 		FAE757CC1E6B109100A27C23 /* FFSDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE757CB1E6B109100A27C23 /* FFSDataSourceTests.swift */; };
 		FAE757CE1E6B109100A27C23 /* FFSDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE757C01E6B109100A27C23 /* FFSDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -45,7 +44,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAC92D2F1ED5D44500D6C015 /* FFSDataSource.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
