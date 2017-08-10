@@ -56,11 +56,18 @@ extension TDSVC: UITableViewDataSource {
 extension TDSVC: UITableViewDelegate {
 
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dataSource(for: tableView)?.selectItem(at: indexPath)
+        // for some odd reason I need to make sure being in the main thread here
+        // without this, there can be a noticeable delay until the event fires
+        DispatchQueue.main.async(execute: { [unowned self] () -> Void in
+            self.dataSource(for: tableView)?.selectItem(at: indexPath)
+        })
     }
 
     open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        dataSource(for: tableView)?.deselectItem(at: indexPath)
+        // ...and just to be sure: same here as in 'didSelectRowAt'
+        DispatchQueue.main.async(execute: { [unowned self] () -> Void in
+            self.dataSource(for: tableView)?.deselectItem(at: indexPath)
+        })
     }
 
     open func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
