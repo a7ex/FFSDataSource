@@ -60,6 +60,7 @@ public protocol TableDataItemModel {
     var onDeselect: TableDataSource.TableItemAction? { get set }
     var configureTableViewCell: TableDataSource.TableViewCellConfiguration? { get set }
     var configureCollectionViewCell: TableDataSource.CollectionViewCellConfiguration? { get set }
+    var rowActions: [UITableViewRowAction]? { get set }
 }
 
 public protocol CollapsableTableDataItemModel: TableDataItemModel {
@@ -699,7 +700,7 @@ open class CellSourceModel: CollapsableTableDataItemModel, ValidatableTableDataI
     open var cellHeight: Double?
 
     /// UITableViewRowAction's that can be applied for cell
-    var rowActions: [UITableViewRowAction]?
+    open var rowActions: [UITableViewRowAction]?
 
     public init(
         cellIdentifier: String,
