@@ -698,6 +698,9 @@ open class CellSourceModel: CollapsableTableDataItemModel, ValidatableTableDataI
     /// fixed cellHeight (leave nil for self sizing cells)
     open var cellHeight: Double?
 
+    /// UITableViewRowAction's that can be applied for cell
+    var rowActions: [UITableViewRowAction]?
+
     public init(
         cellIdentifier: String,
         elementId: String=UUID().uuidString,
