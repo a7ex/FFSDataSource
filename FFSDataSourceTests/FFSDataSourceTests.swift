@@ -57,6 +57,18 @@ class FFSDataSourceTests: XCTestCase {
 
         XCTAssert(tds.model(at: IndexPath(row: 1, section: 0)) != nil, "model at index 3 of 0 must exist")
         XCTAssert(tds.item(at: IndexPath(row: 0, section: 3)) != nil, "item at index 0 of 3 must exist")
+
+        if let section = tds.section(at: 2) {
+            tds.remove(section)
+            XCTAssert(tds.numberOfSections() == 3, "Number of sections must be 3")
+        }
+        let sectionToRemove = tds.section(at: 1)
+        let removed = tds.removeSection(with: sectionToRemove?.sectionData.elementId ?? "")
+        XCTAssert(tds.numberOfSections() == 2, "Number of sections must be 2")
+        XCTAssert(sectionToRemove?.sectionData.elementId == removed?.sectionData.elementId, "ElementID of deleted item must match the one of returned item")
+
+        tds.showSectionHeaders = true
+XCTAssert(tds.section(at: 0)?.showSectionHeaders == true, "When setting showSectionHeaders on a table all sections are set to showSectionHeaders")
     }
 
     func test2() {
@@ -65,7 +77,60 @@ class FFSDataSourceTests: XCTestCase {
         let tds = TableDataSource()
         let sec = tds.addSection()
         sec.addTableItem(with: CellSourceModel(cellIdentifier: ""))
+
+        tds.addTableItem(with: CellSourceModel(
+            cellIdentifier: "",
+            elementId: "testId",
+            configureTableViewCell: { (cell, model, indexPath) in
+
+        }, onSelect: { (indexPath) in
+
+        }))
+
         XCTAssert(tds.numberOfSections() == 1, "Number of sections must be 1")
+        XCTAssert(tds.numberOfItems(in: 0) == 2, "Number of items must be 2")
+
+        tds.addTableItem(with: CellSourceModel(
+            cellIdentifier: "",
+            elementId: "testId",
+            configureTableViewCell: { (cell, model, indexPath) in
+
+        }, onSelect: { (indexPath) in
+
+        }), toSection: 0)
+        XCTAssert(tds.numberOfSections() == 1, "Number of sections must be 1")
+        XCTAssert(tds.numberOfItems(in: 0) == 3, "Number of items must be 3")
+
+        tds.addTableItem(with: CellSourceModel(
+            cellIdentifier: "",
+            elementId: "testId",
+            configureTableViewCell: { (cell, model, indexPath) in
+
+        }, onSelect: { (indexPath) in
+
+        }), toSection: 2)
+        XCTAssert(tds.numberOfSections() == 3, "Number of sections must be 3")
+        XCTAssert(tds.numberOfItems(in: 0) == 3, "Number of items must still be 3 in section 0")
+        XCTAssert(tds.numberOfItems(in: 1) == 0, "Number of items must be 0 in automatically added section 2")
+        XCTAssert(tds.numberOfItems(in: 2) == 1, "Number of items must be 1 in new section 3")
+    }
+
+    func test3() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let tds = TableDataSource()
+
+        tds.addTableItem(with: CellSourceModel(
+            cellIdentifier: "",
+            elementId: "testId",
+            configureTableViewCell: { (cell, model, indexPath) in
+
+        }, onSelect: { (indexPath) in
+
+        }))
+
+        XCTAssert(tds.numberOfSections() == 1, "Number of sections must be 1")
+        XCTAssert(tds.numberOfItems(in: 0) == 1, "Number of items must be 1")
     }
 
     func testPerformanceExample() {

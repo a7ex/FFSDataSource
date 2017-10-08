@@ -8,7 +8,13 @@
 
 import UIKit
 
-open class TDSVC: UIViewController, FFSDataSourceStorageVC {
+public protocol FFSDataSourceController: class, FFSDataSourceStorageVC {
+    var tableView: UITableView? { get }
+    var collectionView: UICollectionView? { get }
+    var geometrieAlreadySetup: Bool { get }
+}
+
+open class TDSVC: UIViewController, FFSDataSourceController {
     // swiftlint:disable:next private_outlet
     @IBOutlet open weak var tableView: UITableView?
     // swiftlint:disable:next private_outlet
@@ -105,7 +111,7 @@ extension TDSVC: UITableViewDelegate {
         if let dataSource = dataSource(for: tableView),
             let section = dataSource.section(at: section),
             section.showSectionHeaders == true {
-            sectionHeaderHeight = section.sectionData?.cellHeight ?? Double(tableView.sectionHeaderHeight)
+            sectionHeaderHeight = section.sectionData.cellHeight ?? Double(tableView.sectionHeaderHeight)
         }
         return CGFloat(sectionHeaderHeight)
     }
@@ -114,8 +120,8 @@ extension TDSVC: UITableViewDelegate {
         if let dataSrc = dataSource(for: tableView),
             let sectionObj = dataSrc.section(at: section),
             sectionObj.showSectionHeaders {
-            if let model = sectionObj.sectionData,
-                let rheight = model.cellHeight {
+             let model = sectionObj.sectionData
+               if let rheight = model.cellHeight {
                 return CGFloat(rheight)
             }
             return tableView.sectionHeaderHeight
@@ -126,8 +132,8 @@ extension TDSVC: UITableViewDelegate {
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let dataSrc = dataSource(for: tableView),
             let sectionObj = dataSrc.section(at: section),
-            sectionObj.showSectionHeaders == true,
-            let model = sectionObj.sectionData {
+            sectionObj.showSectionHeaders == true {
+            let model = sectionObj.sectionData
             if let cell = tableView.dequeueReusableCell(withIdentifier: model.cellIdentifier) {
                 model.configureTableViewCell?(cell, model, IndexPath(row: 0, section: section))
                 return cell.contentView
@@ -172,14 +178,14 @@ extension TDSVC: UICollectionViewDelegate {
 }
 
 // UITableView helpers
-public extension TDSVC {
+public extension FFSDataSourceController {
 
-    final func clearTableViewSelections() {
+    public func clearTableViewSelections() {
         guard let tableView = tableView else { return }
         clearTableViewSelections(of: tableView)
     }
 
-    final func clearTableViewSelections(of targetTableView: UITableView) {
+    public func clearTableViewSelections(of targetTableView: UITableView) {
         if let selections = targetTableView.indexPathsForSelectedRows {
             for thisIndexPath in selections {
                 targetTableView.deselectRow(at: thisIndexPath, animated: true)
@@ -187,12 +193,12 @@ public extension TDSVC {
         }
     }
 
-    final func clearCollectionViewSelections() {
+    public func clearCollectionViewSelections() {
         guard let collectionView = collectionView else { return }
         clearCollectionViewSelections(of: collectionView)
     }
 
-    final func clearCollectionViewSelections(of targetCollectionView: UICollectionView) {
+    public func clearCollectionViewSelections(of targetCollectionView: UICollectionView) {
         if let selections = targetCollectionView.indexPathsForSelectedItems {
             for thisIndexPath in selections {
                 targetCollectionView.deselectItem(at: thisIndexPath, animated: true)
@@ -200,7 +206,7 @@ public extension TDSVC {
         }
     }
 
-    func modelForViewInCell(_ viewInCell: UIView) -> TableDataItemModel? {
+    public func modelForViewInCell(_ viewInCell: UIView) -> TableDataItemModel? {
         if let tableCell = enclosingTableViewCell(viewInCell) {
             return modelForViewInTableViewCell(tableCell)
         }
@@ -210,7 +216,7 @@ public extension TDSVC {
         return nil
     }
 
-    func modelForViewInTableViewCell(_ tableCell: UITableViewCell) -> TableDataItemModel? {
+    public func modelForViewInTableViewCell(_ tableCell: UITableViewCell) -> TableDataItemModel? {
         if let dataSrc = dataSource(for: tableView),
             let indexPath = tableCell.indexPath,
             let model = dataSrc.model(at: indexPath) {
@@ -219,7 +225,7 @@ public extension TDSVC {
         return nil
     }
 
-    func modelForViewInCollectionViewCell(_ viewInCell: UIView) -> TableDataItemModel? {
+    public func modelForViewInCollectionViewCell(_ viewInCell: UIView) -> TableDataItemModel? {
         if let cell = enclosingCollectionViewCell(viewInCell),
             let dataSrc = dataSource(for: collectionView),
             let indexPath = cell.indexPath,
@@ -229,7 +235,7 @@ public extension TDSVC {
         return nil
     }
 
-    func tableItemForViewInCell(_ viewInCell: UIView) -> TableDataSource.TableItem? {
+    public func tableItemForViewInCell(_ viewInCell: UIView) -> TableDataSource.TableItem? {
         if let tableCell = enclosingTableViewCell(viewInCell),
             let dataSrc = dataSource(for: tableView),
             let indexPath = tableCell.indexPath {
@@ -238,7 +244,7 @@ public extension TDSVC {
         return nil
     }
 
-    func indexPathOfCellWithView(_ viewInCell: UIView) -> IndexPath? {
+    public func indexPathOfCellWithView(_ viewInCell: UIView) -> IndexPath? {
         if let tableCell = enclosingTableViewCell(viewInCell) {
             return tableCell.indexPath
         }
