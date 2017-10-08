@@ -42,43 +42,42 @@ import FFSDataSource
 
 class ViewController: TDSVC {
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-    setupTable()
-  }
-
-  private func setupTable() {
-    guard let tableView = tableView else { return }
-    setDataSource(testDataSource(), forView: tableView)
-  }
-
-  private func testDataSource() -> TableDataSource {
-    let dataSource = TableDataSource()
-    let section = dataSource.addSection()
-
-    section.addTableItem(with: CellSourceModel(
-      cellIdentifier: "StandardCell",
-      configureTableViewCell: { (cell, model, indexPath) in
-        cell.textLabel?.text = "Cell content"
-    },
-      onSelect: { (indexPath) in
-        print("Tap on cell \(indexPath.row) of section \(indexPath.section).")
-    }))
-
-    for number in 0...10 {
-        section.addTableItem(with: CellSourceModel(
-            cellIdentifier: "NumberCell",
-            configureTableViewCell: { (cell, model, indexPath) in
-                cell.textLabel?.text = String(number)
-            },
-            onSelect: { (indexPath) in
-                print("Tap on number \(number) in cell \(indexPath.row) of section \(indexPath.section).")
-         }))
+        setupTable()
     }
 
-    return dataSource
-  }
+    private func setupTable() {
+        guard let tableView = tableView else { return }
+        setDataSource(testDataSource(), forView: tableView)
+    }
+
+    private func testDataSource() -> TableDataSource {
+        let dataSource = TableDataSource()
+        let section = dataSource.addSection()
+
+        section.addTableItem(with: CellSourceModel(
+            cellIdentifier: "StandardCell",
+            configureTableViewCell: { (cell, model, indexPath) in
+                cell.textLabel?.text = "Cell content"
+        },
+            onSelect: { (indexPath) in
+                print("Tap on cell \(indexPath.row) of section \(indexPath.section).")
+        }))
+
+        for number in 0...10 {
+            section.addTableItem(with: CellSourceModel(
+                cellIdentifier: "NumberCell",
+                configureTableViewCell: { (cell, model, indexPath) in
+                    cell.textLabel?.text = String(number)
+            },
+                onSelect: { (indexPath) in
+                    print("Tap on number \(number) in cell \(indexPath.row) of section \(indexPath.section).")
+            }))
+        }
+        return dataSource
+    }
 }
 ```
 Add a UITableView to your ViewCobtroller and connect it to the outlet tableView, which is defined in the base class "TDSVC".
