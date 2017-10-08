@@ -8,7 +8,7 @@
 
 import UIKit
 
-fileprivate extension UIView {
+extension UIView {
     func nearestSuperview<T: UIView>(ofType type: T.Type) -> T? {
         return self as? T ?? superview?.nearestSuperview(ofType: type)
     }

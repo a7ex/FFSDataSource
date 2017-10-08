@@ -120,8 +120,8 @@ extension TDSVC: UITableViewDelegate {
         if let dataSrc = dataSource(for: tableView),
             let sectionObj = dataSrc.section(at: section),
             sectionObj.showSectionHeaders {
-             let model = sectionObj.sectionData
-               if let rheight = model.cellHeight {
+            let model = sectionObj.sectionData
+            if let rheight = model.cellHeight {
                 return CGFloat(rheight)
             }
             return tableView.sectionHeaderHeight
@@ -182,10 +182,10 @@ public extension FFSDataSourceController {
 
     public func clearTableViewSelections() {
         guard let tableView = tableView else { return }
-        clearTableViewSelections(of: tableView)
+        clearSelections(of: tableView)
     }
 
-    public func clearTableViewSelections(of targetTableView: UITableView) {
+    public func clearSelections(of targetTableView: UITableView) {
         if let selections = targetTableView.indexPathsForSelectedRows {
             for thisIndexPath in selections {
                 targetTableView.deselectRow(at: thisIndexPath, animated: true)
@@ -195,10 +195,10 @@ public extension FFSDataSourceController {
 
     public func clearCollectionViewSelections() {
         guard let collectionView = collectionView else { return }
-        clearCollectionViewSelections(of: collectionView)
+        clearSelections(of: collectionView)
     }
 
-    public func clearCollectionViewSelections(of targetCollectionView: UICollectionView) {
+    public func clearSelections(of targetCollectionView: UICollectionView) {
         if let selections = targetCollectionView.indexPathsForSelectedItems {
             for thisIndexPath in selections {
                 targetCollectionView.deselectItem(at: thisIndexPath, animated: true)
@@ -207,17 +207,23 @@ public extension FFSDataSourceController {
     }
 
     public func modelForViewInCell(_ viewInCell: UIView) -> TableDataItemModel? {
-        if let tableCell = enclosingTableViewCell(viewInCell) {
-            return modelForViewInTableViewCell(tableCell)
+        let (table, collection) = viewInCell.nearestTableOrCollectionView()
+        if table != nil {
+            if let tableCell = enclosingTableViewCell(viewInCell) {
+                return model(in: tableCell)
+            }
         }
-        else if let _ = enclosingTableViewCell(viewInCell) {
-            return modelForViewInCollectionViewCell(viewInCell)
+        if collection != nil {
+            if let collectionViewCell = enclosingCollectionViewCell(viewInCell) {
+                return model(in: collectionViewCell)
+            }
         }
         return nil
     }
 
-    public func modelForViewInTableViewCell(_ tableCell: UITableViewCell) -> TableDataItemModel? {
-        if let dataSrc = dataSource(for: tableView),
+    private func model(in tableCell: UITableViewCell) -> TableDataItemModel? {
+        if let table = tableCell.nearestSuperview(ofType: UITableView.self),
+            let dataSrc = dataSource(for: table),
             let indexPath = tableCell.indexPath,
             let model = dataSrc.model(at: indexPath) {
             return model
@@ -225,10 +231,10 @@ public extension FFSDataSourceController {
         return nil
     }
 
-    public func modelForViewInCollectionViewCell(_ viewInCell: UIView) -> TableDataItemModel? {
-        if let cell = enclosingCollectionViewCell(viewInCell),
-            let dataSrc = dataSource(for: collectionView),
-            let indexPath = cell.indexPath,
+    private func model(in collectionViewCell: UICollectionViewCell) -> TableDataItemModel? {
+        if let collView = collectionViewCell.nearestSuperview(ofType: UICollectionView.self),
+            let dataSrc = dataSource(for: collView),
+            let indexPath = collectionViewCell.indexPath,
             let model = dataSrc.model(at: indexPath) {
             return model
         }
@@ -249,5 +255,17 @@ public extension FFSDataSourceController {
             return tableCell.indexPath
         }
         return nil
+    }
+}
+
+extension UIView {
+    func nearestTableOrCollectionView() -> (UITableView?, UICollectionView?) {
+        if let tableView = self as? UITableView {
+            return (tableView, nil)
+        }
+        if let collectionView = self as? UICollectionView {
+            return (nil, collectionView)
+        }
+        return superview?.nearestTableOrCollectionView() ?? (nil, nil)
     }
 }
