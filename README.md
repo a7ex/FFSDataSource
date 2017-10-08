@@ -34,13 +34,14 @@ You're ready to go! 🎉
 
 ## How to use it
 
-In any of your class, where you want to use `FFSDataSource`
+Here is a very simple example of a viewController using _FFSDataSource_.
 
+- Create a class *SimpleTableController* with the follwoing code:
 ```
 import UIKit
 import FFSDataSource
 
-class ViewController: TDSVC {
+class SimpleTableController: TDSVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,8 +81,9 @@ class ViewController: TDSVC {
     }
 }
 ```
-Add a UITableView to your ViewCobtroller and connect it to the outlet tableView, which is defined in the base class "TDSVC".
+Create a scene in InterfaceBuilder and set its _Custom Class_ in the Identity Inspector to _SimpleTableController_
+Add a UITableView to your scene and connect it to the outlet _tableView_ (Control+Drag from ViewController Icon to UITableView element in scene).
 
-"TDSVC" provides all necessary dataSource and delegate methods to connect `FFSDataSource` with your ViewController. Of course you can use your own ViewController (or baseclass) which complies to protocol "FFSDataSourceStorageVC".
+_TDSVC_ provides all necessary dataSource and delegate methods to connect _FFSDataSource_ to your ViewController. Of course you can use your own ViewController (or baseclass) which complies to protocol _FFSDataSourceStorageVC_.
 
-"CellSourceModel" is a class which can be used as starting point to represent a cell model. You can either subclass it to customize or you can use your own class OR struct, which complies to protocol "TableDataItemModel"
+_CellSourceModel_ is a class which can be used as starting point to represent a cell model. If necessary, you can either subclass it to customize or you can use your own class OR struct, which complies to protocol _TableDataItemModel_
