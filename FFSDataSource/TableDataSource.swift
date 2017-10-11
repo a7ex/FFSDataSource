@@ -173,7 +173,7 @@ open class TableDataSource {
      - returns: newly created section object of class TableDataSource.TableSection
      */
     @discardableResult
-    open func addSection(with sectionData: TableDataItemModel?=nil, atIndex index: Int?=nil) -> TableSection {
+    open func addSection(with sectionData: TableDataItemModel = TableSection.defaultModel, atIndex index: Int?=nil) -> TableSection {
         var cnt = sections.count
         var newIndex = cnt
 
@@ -243,7 +243,7 @@ open class TableDataSource {
     open func removeSection(with elementId: String) -> TableSection? {
         for i in stride(from: (sections.count - 1), through: 0, by: -1) {
             let thisItem = sections[i]
-            if thisItem.sectionData?.elementId == elementId {
+            if thisItem.sectionData.elementId == elementId {
                 sections.remove(at: i)
                 for i in 0..<sections.count {
                     sections[i].index = i
@@ -269,7 +269,7 @@ open class TableDataSource {
      - returns: section object of class TableDataSource.TableSection with title 'title' or nil
      */
     open func section(with elementId: String) -> TableSection? {
-        return sections.first(where: { $0.sectionData?.elementId == elementId })
+        return sections.first(where: { $0.sectionData.elementId == elementId })
     }
 
     /**
@@ -450,18 +450,17 @@ open class TableDataSource {
     open class TableSection {
         open var showSectionHeaders = false
         open var showSectionFooters = false
-        open var sectionData: TableDataItemModel?
+        open var sectionData: TableDataItemModel
         open var index = 0
 
         private var tableItems = [TableItem]()
 
         deinit {
-            sectionData = nil
+            sectionData = TableSection.defaultModel
             tableItems = [TableItem]()
         }
 
-        public convenience init(with sectionData: TableDataItemModel?=nil, at index: Int?=nil) {
-            self.init()
+        public init(with sectionData: TableDataItemModel = defaultModel, at index: Int?=nil) {
             self.sectionData = sectionData
             if let index = index {
                 self.index = index
@@ -571,7 +570,7 @@ open class TableDataSource {
             return tableItems.count
         }
 
-        func itemHeight(at index: Int) -> CGFloat {
+        open func itemHeight(at index: Int) -> CGFloat {
             return item(at: index)?.cellheight ?? CGFloat(0)
         }
 
@@ -602,6 +601,10 @@ open class TableDataSource {
                 }
             }
             return nil
+        }
+
+        open static var defaultModel: TableDataItemModel {
+            return CellSourceModel(cellIdentifier: "HeaderCell")
         }
 
         func doSelectionAction(at index: Int) {
