@@ -337,11 +337,16 @@ section.showSectionHeaders = true
         vc.viewWillLayoutSubviews()
         let tabView = vc.tableView!
         tabView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
-        guard let indPaths = tabView.indexPathsForVisibleRows else {
+        guard let indPaths = tabView.indexPathsForSelectedRows else {
             XCTFail()
             return
         }
         XCTAssert(indPaths.count > 0)
+        vc.clearSelections(of: tabView)
+        guard let indPathsAfterDeselect = tabView.indexPathsForSelectedRows else {
+            return
+        }
+        XCTAssert(indPathsAfterDeselect.count == 0)
     }
 
     private func dataSourceDummy(with testOutput: TestOutput) -> TableDataSource {
