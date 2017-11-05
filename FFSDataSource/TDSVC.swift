@@ -80,7 +80,7 @@ extension TDSVC: UITableViewDelegate {
         var rowHeight = Double(tableView.rowHeight)
         if let dataSource = dataSource(for: tableView),
             let model = dataSource.model(at: indexPath) {
-            rowHeight = model.cellHeight ?? Double(tableView.sectionHeaderHeight)
+            rowHeight = model.cellHeight ?? Double(tableView.rowHeight)
         }
         return CGFloat(rowHeight)
     }
@@ -95,12 +95,10 @@ extension TDSVC: UITableViewDelegate {
             if let rowHeight = model.cellHeight {
                 cellHeight = CGFloat(rowHeight)
             }
-            if let model = model as? CollapsableTableDataItemModel {
-                if model.cellExpandHeightDifference > 0 {
-                    if !model.collapsed {
-                        return cellHeight + CGFloat(model.cellExpandHeightDifference)
-                    }
-                }
+            if let model = model as? CollapsableTableDataItemModel,
+                model.cellExpandHeightDifference > 0,
+                !model.collapsed {
+                return cellHeight + CGFloat(model.cellExpandHeightDifference)
             }
         }
         return cellHeight
