@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol FFSDataSourceController: class, FFSDataSourceStorageVC {
+public protocol FFSDataSourceController: FFSDataSourceStorageVC {
     var tableView: UITableView? { get }
     var collectionView: UICollectionView? { get }
     var geometrieAlreadySetup: Bool { get }

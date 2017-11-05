@@ -164,13 +164,13 @@
 				TargetAttributes = {
 					FAE757BC1E6B109100A27C23 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = EZF8YHW75M;
+						DevelopmentTeam = GNGL9A39VR;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 					FAE757C51E6B109100A27C23 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = EZF8YHW75M;
+						DevelopmentTeam = GNGL9A39VR;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
@@ -361,7 +361,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = EZF8YHW75M;
+				DEVELOPMENT_TEAM = GNGL9A39VR;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -384,7 +384,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = EZF8YHW75M;
+				DEVELOPMENT_TEAM = GNGL9A39VR;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -405,7 +405,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = EZF8YHW75M;
+				DEVELOPMENT_TEAM = GNGL9A39VR;
 				INFOPLIST_FILE = FFSDataSourceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.farbflash.FFSDataSourceTests;
@@ -420,7 +420,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = EZF8YHW75M;
+				DEVELOPMENT_TEAM = GNGL9A39VR;
 				INFOPLIST_FILE = FFSDataSourceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.farbflash.FFSDataSourceTests;
