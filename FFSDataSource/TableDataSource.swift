@@ -390,7 +390,7 @@ open class TableDataSource {
      - returns: array with all models with a given elementId
      */
     open func models(by elementId: String) -> [TableDataItemModel] {
-        return allItems.flatMap {
+        return allItems.compactMap {
             ($0.model.elementId == elementId) ?
                 $0.model: nil
         }
