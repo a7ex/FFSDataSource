@@ -33,11 +33,16 @@ class FFSDataSourceStorageVCTests: XCTestCase {
     
     func testIndexPathForCell() {
         let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 200, height: 300), style: .plain)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "StandardCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "NumberCell")
         let output = Output()
         let dataSource = TestFactory.dataSourceDummy(with: output)
         let dataSourceObject = TableDataSourceConnector(with: dataSource)
         tableView.dataSource = dataSourceObject
         tableView.delegate = dataSourceObject
         tableView.reloadData()
+        let indexPath = IndexPath(row: 0, section: 0)
+        let cell = tableView.cellForRow(at: indexPath)
+        XCTAssert(cell?.indexPath == indexPath)
     }
 }
