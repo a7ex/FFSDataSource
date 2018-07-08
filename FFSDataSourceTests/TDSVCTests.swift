@@ -94,10 +94,11 @@ class TDSVCTests: XCTestCase {
         let tabView = vcToTest.tableView!
         tabView.register(UITableViewCell.self, forCellReuseIdentifier: "StandardCell")
         vcToTest.setDataSource(dataSourceDummy(with: output), forView: tabView)
+        vcToTest.tableView?.reloadData()
         XCTAssert(vcToTest.tableView(tabView, cellForRowAt: IndexPath(row: 0, section: 0)) != nil)
     }
     
-    func dis_testCellForItem() {
+    func testCellForItem() {
         setupCollectionView()
         vcToTest.view.layoutIfNeeded()
         let collectionView = vcToTest.collectionView!
@@ -110,6 +111,7 @@ class TDSVCTests: XCTestCase {
             }))
         
         vcToTest.setDataSource(dataSource, forView: collectionView)
+        vcToTest.collectionView?.reloadData()
         XCTAssert(vcToTest.collectionView(collectionView, cellForItemAt: IndexPath(row: 0, section: 0)) != nil)
     }
 

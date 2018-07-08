@@ -37,9 +37,8 @@ class FFSDataSourceStorageVCTests: XCTestCase {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "NumberCell")
         let output = Output()
         let dataSource = TestFactory.dataSourceDummy(with: output)
-        let dataSourceObject = TableDataSourceConnector(with: dataSource)
-        tableView.dataSource = dataSourceObject
-        tableView.delegate = dataSourceObject
+        let dataSourceConnector = TableDataSourceConnector(with: dataSource)
+        tableView.connect(to: dataSourceConnector)
         tableView.reloadData()
         let indexPath = IndexPath(row: 0, section: 0)
         let cell = tableView.cellForRow(at: indexPath)

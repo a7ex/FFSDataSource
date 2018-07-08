@@ -26,6 +26,12 @@ public extension UICollectionViewCell {
     }
 }
 
+public protocol TableOrCollectionView {
+    var hashValue: Int { get }
+}
+extension UITableView: TableOrCollectionView { }
+extension UICollectionView: TableOrCollectionView { }
+
 public protocol FFSDataSourceStorageVC: class {
     var tableDataSources: [String: TableDataSource] { get set }
 }
@@ -37,7 +43,7 @@ public extension FFSDataSourceStorageVC {
     /// - Parameters:
     ///   - datasource: An instance of TableDataSource
     ///   - targetView: typically an instance of either UITableView or UICollectionView
-    func setDataSource(_ datasource: TableDataSource, forView targetView: UIView) {
+    func setDataSource(_ datasource: TableDataSource, forView targetView: TableOrCollectionView) {
         tableDataSources["\(targetView.hashValue)"] = datasource
     }
 
@@ -45,7 +51,7 @@ public extension FFSDataSourceStorageVC {
     ///
     /// - Parameter targetView: typically an instance of either UITableView or UICollectionView
     /// - Returns: An instance of TableDataSource or nil
-    func dataSource(for targetView: UIView?) -> TableDataSource? {
+    func dataSource(for targetView: TableOrCollectionView?) -> TableDataSource? {
         guard let targetView = targetView else { return nil }
         return tableDataSources["\(targetView.hashValue)"]
     }

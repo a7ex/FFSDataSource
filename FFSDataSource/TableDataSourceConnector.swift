@@ -8,6 +8,13 @@
 
 import UIKit
 
+public extension UITableView {
+    public func connect(to connector: TableDataSourceConnector) {
+        delegate = connector
+        dataSource = connector
+    }
+}
+
 public class TableDataSourceConnector: NSObject {
     private let dataSource: TableDataSource
     
