@@ -1,5 +1,5 @@
 //
-//  TableDataSourceConnector.swift
+//  TableViewDataSourceConnector.swift
 //  FFSDataSource
 //
 //  Created by Alex da Franca on 03.04.18.
@@ -8,22 +8,18 @@
 
 import UIKit
 
-public extension UITableView {
-    public func connect(to connector: TableDataSourceConnector) {
-        delegate = connector
-        dataSource = connector
-    }
-}
-
-public class TableDataSourceConnector: NSObject {
+public class TableViewDataSourceConnector: NSObject {
     private let dataSource: TableDataSource
     
-    public init(with tableDataSource: TableDataSource) {
+    public init(with tableDataSource: TableDataSource, in tableView: UITableView) {
         self.dataSource = tableDataSource
+        super.init()
+        tableView.delegate = self
+        tableView.dataSource = self
     }
 }
 
-extension TableDataSourceConnector: UITableViewDataSource {
+extension TableViewDataSourceConnector: UITableViewDataSource {
     open func numberOfSections(in tableView: UITableView) -> Int {
         return dataSource.numberOfSections()
     }
@@ -42,7 +38,7 @@ extension TableDataSourceConnector: UITableViewDataSource {
     }
 }
 
-extension TableDataSourceConnector: UITableViewDelegate {
+extension TableViewDataSourceConnector: UITableViewDelegate {
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // for some odd reason I need to make sure being in the main thread here
         // without this, there can be a noticeable delay until the event fires

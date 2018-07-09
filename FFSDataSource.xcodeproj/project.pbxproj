@@ -9,13 +9,12 @@
 /* Begin PBXBuildFile section */
 		36A2818A1F91805C00604F3F /* TDSVCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A281891F91805C00604F3F /* TDSVCTests.swift */; };
 		FAD195D92072CBFC00F6EA62 /* FFSDataSourceStorageVCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD195D82072CBFC00F6EA62 /* FFSDataSourceStorageVCTests.swift */; };
-		FAD195DB20736A7D00F6EA62 /* TableDataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD195DA20736A7D00F6EA62 /* TableDataSourceConnector.swift */; };
+		FAE1ABC020F32D44003FBAB6 /* TableViewDataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */; };
+		FAE1ABC220F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */; };
 		FAE757C71E6B109100A27C23 /* FFSDataSource.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE757BD1E6B109100A27C23 /* FFSDataSource.framework */; };
 		FAE757CC1E6B109100A27C23 /* FFSDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE757CB1E6B109100A27C23 /* FFSDataSourceTests.swift */; };
 		FAE757CE1E6B109100A27C23 /* FFSDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE757C01E6B109100A27C23 /* FFSDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FAE757D81E6B10F200A27C23 /* TableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE757D71E6B10F200A27C23 /* TableDataSource.swift */; };
-		FAE757DA1E6B110300A27C23 /* TDSVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE757D91E6B110300A27C23 /* TDSVC.swift */; };
-		FAE757F21E6CA08400A27C23 /* FFSDataSourceStorageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE757F11E6CA08400A27C23 /* FFSDataSourceStorageVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,7 +32,8 @@
 		FA7E72D61E6D32580062671F /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		FA7E72D71E6D32630062671F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FAD195D82072CBFC00F6EA62 /* FFSDataSourceStorageVCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFSDataSourceStorageVCTests.swift; sourceTree = "<group>"; };
-		FAD195DA20736A7D00F6EA62 /* TableDataSourceConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableDataSourceConnector.swift; sourceTree = "<group>"; };
+		FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewDataSourceConnector.swift; sourceTree = "<group>"; };
+		FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSourceConnector.swift; sourceTree = "<group>"; };
 		FAE757BD1E6B109100A27C23 /* FFSDataSource.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FFSDataSource.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAE757C01E6B109100A27C23 /* FFSDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFSDataSource.h; sourceTree = "<group>"; };
 		FAE757C11E6B109100A27C23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -41,8 +41,6 @@
 		FAE757CB1E6B109100A27C23 /* FFSDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFSDataSourceTests.swift; sourceTree = "<group>"; };
 		FAE757CD1E6B109100A27C23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FAE757D71E6B10F200A27C23 /* TableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableDataSource.swift; sourceTree = "<group>"; };
-		FAE757D91E6B110300A27C23 /* TDSVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TDSVC.swift; sourceTree = "<group>"; };
-		FAE757F11E6CA08400A27C23 /* FFSDataSourceStorageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFSDataSourceStorageVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,9 +87,8 @@
 			children = (
 				FAE757C01E6B109100A27C23 /* FFSDataSource.h */,
 				FAE757D71E6B10F200A27C23 /* TableDataSource.swift */,
-				FAE757F11E6CA08400A27C23 /* FFSDataSourceStorageVC.swift */,
-				FAE757D91E6B110300A27C23 /* TDSVC.swift */,
-				FAD195DA20736A7D00F6EA62 /* TableDataSourceConnector.swift */,
+				FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */,
+				FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */,
 				FAE757C11E6B109100A27C23 /* Info.plist */,
 			);
 			path = FFSDataSource;
@@ -222,10 +219,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAE757DA1E6B110300A27C23 /* TDSVC.swift in Sources */,
+				FAE1ABC020F32D44003FBAB6 /* TableViewDataSourceConnector.swift in Sources */,
 				FAE757D81E6B10F200A27C23 /* TableDataSource.swift in Sources */,
-				FAE757F21E6CA08400A27C23 /* FFSDataSourceStorageVC.swift in Sources */,
-				FAD195DB20736A7D00F6EA62 /* TableDataSourceConnector.swift in Sources */,
+				FAE1ABC220F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
