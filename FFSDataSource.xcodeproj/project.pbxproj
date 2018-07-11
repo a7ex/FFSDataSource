@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		36A2818A1F91805C00604F3F /* TDSVCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A281891F91805C00604F3F /* TDSVCTests.swift */; };
-		FAD195D92072CBFC00F6EA62 /* FFSDataSourceStorageVCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD195D82072CBFC00F6EA62 /* FFSDataSourceStorageVCTests.swift */; };
+		FA7DBB2620F5EC47002E0B54 /* CellSourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */; };
 		FAE1ABC020F32D44003FBAB6 /* TableViewDataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */; };
 		FAE1ABC220F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */; };
 		FAE757C71E6B109100A27C23 /* FFSDataSource.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE757BD1E6B109100A27C23 /* FFSDataSource.framework */; };
@@ -28,10 +27,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		36A281891F91805C00604F3F /* TDSVCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDSVCTests.swift; sourceTree = "<group>"; };
+		FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellSourceModel.swift; sourceTree = "<group>"; };
 		FA7E72D61E6D32580062671F /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		FA7E72D71E6D32630062671F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		FAD195D82072CBFC00F6EA62 /* FFSDataSourceStorageVCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFSDataSourceStorageVCTests.swift; sourceTree = "<group>"; };
 		FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewDataSourceConnector.swift; sourceTree = "<group>"; };
 		FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSourceConnector.swift; sourceTree = "<group>"; };
 		FAE757BD1E6B109100A27C23 /* FFSDataSource.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FFSDataSource.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,6 +87,7 @@
 				FAE757D71E6B10F200A27C23 /* TableDataSource.swift */,
 				FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */,
 				FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */,
+				FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */,
 				FAE757C11E6B109100A27C23 /* Info.plist */,
 			);
 			path = FFSDataSource;
@@ -99,8 +98,6 @@
 			children = (
 				FAE757CB1E6B109100A27C23 /* FFSDataSourceTests.swift */,
 				FAE757CD1E6B109100A27C23 /* Info.plist */,
-				36A281891F91805C00604F3F /* TDSVCTests.swift */,
-				FAD195D82072CBFC00F6EA62 /* FFSDataSourceStorageVCTests.swift */,
 			);
 			path = FFSDataSourceTests;
 			sourceTree = "<group>";
@@ -221,6 +218,7 @@
 			files = (
 				FAE1ABC020F32D44003FBAB6 /* TableViewDataSourceConnector.swift in Sources */,
 				FAE757D81E6B10F200A27C23 /* TableDataSource.swift in Sources */,
+				FA7DBB2620F5EC47002E0B54 /* CellSourceModel.swift in Sources */,
 				FAE1ABC220F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -229,9 +227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36A2818A1F91805C00604F3F /* TDSVCTests.swift in Sources */,
 				FAE757CC1E6B109100A27C23 /* FFSDataSourceTests.swift in Sources */,
-				FAD195D92072CBFC00F6EA62 /* FFSDataSourceStorageVCTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

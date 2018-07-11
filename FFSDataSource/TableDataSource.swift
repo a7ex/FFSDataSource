@@ -26,9 +26,6 @@ import UIKit
  }
  dataSrc.showSectionHeaders = true
  ```
- Use "TableDataSource" in your datasource and delegate of the UITableView
- or subclass the provided baseclass 'TDSVC'
- By using the provided baseclass 'TDSVC' you automatically get the calls to the closures and datasource methods
  */
 
 
@@ -57,10 +54,10 @@ public protocol TableDataItemModel {
     var cellIdentifier: String { get set }
     var elementId: String { get set }
     var cellHeight: Double? { get set }
-    var onSelect: TableDataSource.TableItemAction? { get set }
-    var onDeselect: TableDataSource.TableItemAction? { get set }
-    var configureTableViewCell: TableDataSource.TableViewCellConfiguration? { get set }
-    var configureCollectionViewCell: TableDataSource.CollectionViewCellConfiguration? { get set }
+    var onSelect: TableItemAction? { get set }
+    var onDeselect: TableItemAction? { get set }
+    var configureTableViewCell: TableViewCellConfiguration? { get set }
+    var configureCollectionViewCell: CollectionViewCellConfiguration? { get set }
     var rowActions: [UITableViewRowAction]? { get set }
 }
 
@@ -73,11 +70,11 @@ public protocol ValidatableTableDataItemModel: TableDataItemModel {
     var evaluation: ((_ model: TableDataItemModel) -> Bool)? { get }
 }
 
+public typealias TableItemAction = (IndexPath, TableDataItemModel) -> Void
+public typealias TableViewCellConfiguration = (UITableViewCell, TableDataItemModel, IndexPath) -> Void
+public typealias CollectionViewCellConfiguration = (UICollectionViewCell, TableDataItemModel, IndexPath) -> Void
+
 open class TableDataSource {
-    
-    public typealias TableItemAction = (IndexPath, TableDataItemModel) -> Void
-    public typealias TableViewCellConfiguration = (UITableViewCell, TableDataItemModel, IndexPath) -> Void
-    public typealias CollectionViewCellConfiguration = (UICollectionViewCell, TableDataItemModel, IndexPath) -> Void
     
     /** @name Properties */
     
@@ -656,75 +653,5 @@ open class TableDataSource {
             index = row
             section = sec
         }
-    }
-}
-
-/// This is a 'sample' CellSourceModel. It complies to protocol 'TableDataItemModel'
-/// It can be used or subclassed as a 'starting point' for a cell model
-///
-/// However any other class or struct can be used as cell models, as long as they
-/// comply to protocol 'TableDataItemModel'
-///
-/// Your specific use case decides, whether to use your own class/struct or
-/// to subclass this class as your customized model
-///
-open class CellSourceModel: CollapsableTableDataItemModel, ValidatableTableDataItemModel {
-    
-    /// ID (unique??) of this element as string
-    open var elementId: String
-    
-    /// TableViewCell storyboard identifier to be used, when dequeing a reusable UITableViewCell
-    open var cellIdentifier: String
-    
-    /// Boolean flag for checkbox-style buttons
-    open var selected: Bool
-    
-    /// "Shadow"-height of collapsable cells (e.g. cells with a picker)
-    open var cellExpandHeightDifference = 0
-    
-    /// Boolean flag of the current collapsed state of a collapsable cell
-    open var collapsed: Bool
-    
-    /// Closure to execute in order to evaluate the model
-    open var evaluation:((_ model: TableDataItemModel) -> Bool)?
-    
-    /// Closure to configure the table cell
-    open var configureTableViewCell: TableDataSource.TableViewCellConfiguration?
-    
-    /// Closure to configure the collectionView cell
-    open var configureCollectionViewCell: TableDataSource.CollectionViewCellConfiguration?
-    
-    /// Closure to execute on cell selection
-    open var onSelect: TableDataSource.TableItemAction?
-    
-    /// Closure to execute on cell deselection
-    open var onDeselect: TableDataSource.TableItemAction?
-    
-    /// fixed cellHeight (leave nil for self sizing cells)
-    open var cellHeight: Double?
-    
-    /// UITableViewRowAction's that can be applied for cell
-    open var rowActions: [UITableViewRowAction]?
-    
-    public init(
-        cellIdentifier: String,
-        elementId: String=UUID().uuidString,
-        selected: Bool=false,
-        collapsed: Bool=false,
-        cellHeight: Double?=nil,
-        configureTableViewCell: TableDataSource.TableViewCellConfiguration?=nil,
-        configureCollectionViewCell: TableDataSource.CollectionViewCellConfiguration?=nil,
-        onSelect: TableDataSource.TableItemAction?=nil,
-        onDeselect: TableDataSource.TableItemAction?=nil
-        ) {
-        self.cellIdentifier = cellIdentifier
-        self.elementId = elementId
-        self.configureTableViewCell = configureTableViewCell
-        self.configureCollectionViewCell = configureCollectionViewCell
-        self.selected = selected
-        self.collapsed = collapsed
-        self.onSelect = onSelect
-        self.onDeselect = onDeselect
-        self.cellHeight = cellHeight
     }
 }
