@@ -31,7 +31,7 @@ class FFSDataSourceTests: XCTestCase {
             configureTableViewCell: { (cell, model, indexPath) in
                 
         },
-            onSelect: { (indexPath) in
+            onSelect: { (indexPath, model) in
                 
         }))
         
@@ -81,7 +81,7 @@ class FFSDataSourceTests: XCTestCase {
             elementId: "testId",
             configureTableViewCell: { (cell, model, indexPath) in
                 
-        }, onSelect: { (indexPath) in
+        }, onSelect: { (indexPath, model) in
             
         }))
         
@@ -93,7 +93,7 @@ class FFSDataSourceTests: XCTestCase {
             elementId: "testId",
             configureTableViewCell: { (cell, model, indexPath) in
                 
-        }, onSelect: { (indexPath) in
+        }, onSelect: { (indexPath, model) in
             
         }), toSection: 0)
         XCTAssert(tds.numberOfSections() == 1, "Number of sections must be 1")
@@ -104,7 +104,7 @@ class FFSDataSourceTests: XCTestCase {
             elementId: "testId",
             configureTableViewCell: { (cell, model, indexPath) in
                 
-        }, onSelect: { (indexPath) in
+        }, onSelect: { (indexPath, model) in
             
         }), toSection: 2)
         XCTAssert(tds.numberOfSections() == 3, "Number of sections must be 3")
@@ -123,7 +123,7 @@ class FFSDataSourceTests: XCTestCase {
             elementId: "testId",
             configureTableViewCell: { (cell, model, indexPath) in
                 
-        }, onSelect: { (indexPath) in
+        }, onSelect: { (indexPath, model) in
             
         }))
         
@@ -188,7 +188,7 @@ class FFSDataSourceTests: XCTestCase {
             configureTableViewCell: { (cell, model, indexPath) in
                 cell.textLabel?.text = "Cell content"
         },
-            onSelect: { (indexPath) in
+            onSelect: { (indexPath, model) in
                 testOutput.print("Tap on cell \(indexPath.row) of section \(indexPath.section).")
         }))
         
@@ -197,9 +197,9 @@ class FFSDataSourceTests: XCTestCase {
                 cellIdentifier: "NumberCell",
                 configureTableViewCell: { (cell, model, indexPath) in
                     cell.textLabel?.text = String(number)
-            }, onSelect: { (indexPath) in
+            }, onSelect: { (indexPath, model) in
                 testOutput.print("Tap on number \(number) in cell \(indexPath.row) of section \(indexPath.section).")
-            }, onDeselect: { (indexPath) in
+            }, onDeselect: { (indexPath, model) in
                 testOutput.print("Deselect cell \(indexPath.row) of section \(indexPath.section).")
             }))
         }
