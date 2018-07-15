@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA721A2520F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA721A2420F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift */; };
 		FA7DBB2620F5EC47002E0B54 /* CellSourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */; };
 		FAE1ABC020F32D44003FBAB6 /* TableViewDataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */; };
 		FAE1ABC220F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FA721A2420F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDataSourceConnectorTests.swift; sourceTree = "<group>"; };
 		FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellSourceModel.swift; sourceTree = "<group>"; };
 		FA7E72D61E6D32580062671F /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		FA7E72D71E6D32630062671F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				FAE757CB1E6B109100A27C23 /* FFSDataSourceTests.swift */,
+				FA721A2420F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift */,
 				FAE757CD1E6B109100A27C23 /* Info.plist */,
 			);
 			path = FFSDataSourceTests;
@@ -227,6 +230,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA721A2520F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift in Sources */,
 				FAE757CC1E6B109100A27C23 /* FFSDataSourceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

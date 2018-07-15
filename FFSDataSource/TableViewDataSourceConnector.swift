@@ -33,7 +33,7 @@ extension TableViewDataSourceConnector: UITableViewDataSource {
             fatalError("TableDataSource: Datasource or model for table \(tableView) at indexPath \(indexPath) not found")
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: model.cellIdentifier, for: indexPath)
-        model.configureTableViewCell?(cell, model, indexPath)
+        model.configureCell?(cell, model, indexPath)
         return cell
     }
 }
@@ -55,59 +55,61 @@ extension TableViewDataSourceConnector: UITableViewDelegate {
     }
     
     open func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        var rowHeight = Double(tableView.rowHeight)
-        if let model = dataSource.model(at: indexPath) {
-            rowHeight = model.cellHeight ?? Double(tableView.rowHeight)
+        guard let model = dataSource.model(at: indexPath),
+            let rowHeight = model.cellHeight else {
+                return tableView.rowHeight
         }
         return CGFloat(rowHeight)
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var cellHeight = UITableViewAutomaticDimension
-        
-        if let model = dataSource.model(at: indexPath) {
-            if let rowHeight = model.cellHeight {
-                cellHeight = CGFloat(rowHeight)
-            }
-            if let model = model as? CollapsableTableDataItemModel,
-                model.cellExpandHeightDifference > 0,
-                !model.collapsed {
-                return cellHeight + CGFloat(model.cellExpandHeightDifference)
-            }
+        guard let model = dataSource.model(at: indexPath) else {
+            return UITableViewAutomaticDimension
+        }
+        let cellHeight: CGFloat
+        if let rowHeight = model.cellHeight {
+            cellHeight = CGFloat(rowHeight)
+        } else {
+            cellHeight = UITableViewAutomaticDimension
+        }
+        if let model = model as? CollapsableTableDataItemModel,
+            model.cellExpandHeightDifference > 0,
+            !model.collapsed {
+            return cellHeight + CGFloat(model.cellExpandHeightDifference)
         }
         return cellHeight
     }
     
     open func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        var sectionHeaderHeight = 0.0
-        if let section = dataSource.section(at: section),
-            section.showSectionHeaders == true {
-            sectionHeaderHeight = section.sectionData.cellHeight ?? Double(tableView.sectionHeaderHeight)
+        guard let section = dataSource.section(at: section),
+            section.showSectionHeaders == true else {
+                return 0
         }
-        return CGFloat(sectionHeaderHeight)
+        guard let headerHeight = section.sectionData?.cellHeight else {
+            return tableView.sectionHeaderHeight
+        }
+        return CGFloat(headerHeight)
     }
     
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if let sectionObj = dataSource.section(at: section),
-            sectionObj.showSectionHeaders {
-            let model = sectionObj.sectionData
-            if let rheight = model.cellHeight {
-                return CGFloat(rheight)
-            }
+        guard let sectionObj = dataSource.section(at: section),
+            sectionObj.showSectionHeaders else {
+                return CGFloat(0)
+        }
+        guard let headerHeight = sectionObj.sectionData?.cellHeight else {
             return tableView.sectionHeaderHeight
         }
-        return CGFloat(0)
+        return CGFloat(headerHeight)
     }
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if let sectionObj = dataSource.section(at: section),
-            sectionObj.showSectionHeaders == true {
-            let model = sectionObj.sectionData
-            if let cell = tableView.dequeueReusableCell(withIdentifier: model.cellIdentifier) {
-                model.configureTableViewCell?(cell, model, IndexPath(row: 0, section: section))
-                return cell.contentView
-            }
+        guard let sectionObj = dataSource.section(at: section),
+            sectionObj.showSectionHeaders == true,
+            let model = sectionObj.sectionData,
+            let cell = tableView.dequeueReusableCell(withIdentifier: model.cellIdentifier) else {
+                return nil
         }
-        return nil
+        model.configureCell?(cell, model, IndexPath(row: 0, section: section))
+        return cell.contentView
     }
 }

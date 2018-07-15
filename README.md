@@ -54,7 +54,7 @@ class SimpleTableController: UIViewController {
 
         section.addTableItem(with: CellSourceModel(
             cellIdentifier: "StandardCell",
-            configureTableViewCell: { (cell, model, indexPath) in
+            configureCell: { (cell, model, indexPath) in
                 cell.textLabel?.text = "Cell content"
         },
             onSelect: { (indexPath) in
@@ -64,7 +64,7 @@ class SimpleTableController: UIViewController {
         for number in 0...10 {
             section.addTableItem(with: CellSourceModel(
                 cellIdentifier: "NumberCell",
-                configureTableViewCell: { (cell, model, indexPath) in
+                configureCell: { (cell, model, indexPath) in
                     cell.textLabel?.text = String(number)
             },
                 onSelect: { (indexPath) in

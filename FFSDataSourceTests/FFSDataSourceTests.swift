@@ -25,10 +25,9 @@ class FFSDataSourceTests: XCTestCase {
         
         let tds = TableDataSource()
         let sec = tds.addSection()
-        sec.addTableItem(with: CellSourceModel(
-            cellIdentifier: "",
+        sec.addTableItem(with: CellSourceModel<StandardCell>(
             elementId: "testId",
-            configureTableViewCell: { (cell, model, indexPath) in
+            configureCell: { (cell, model, indexPath) in
                 
         },
             onSelect: { (indexPath, model) in
@@ -40,7 +39,7 @@ class FFSDataSourceTests: XCTestCase {
         XCTAssert(!tds.models(by: "testId").isEmpty, "DataSource must contain cell with elementId 'testId'")
         XCTAssert(tds.model(at: IndexPath(row: 0, section: 0)) != nil, "model at index 0 of 0 must exist")
         
-        let tableItem = sec.addTableItem(with: CellSourceModel(cellIdentifier: "Cell2"))
+        let tableItem = sec.addTableItem(with: CellSourceModel<StandardCell>())
         XCTAssert(tableItem.getIndexPath().row == 1, "model must be at row 1")
         XCTAssert(tds.allItems.count == 2, "allItems.count must be 2")
         
@@ -63,9 +62,10 @@ class FFSDataSourceTests: XCTestCase {
             XCTAssert(tds.numberOfSections() == 3, "Number of sections must be 3")
         }
         let sectionToRemove = tds.section(at: 1)
-        let removed = tds.removeSection(with: sectionToRemove?.sectionData.elementId ?? "")
+        sectionToRemove?.sectionData = CellSourceModel<StandardCell>(elementId: "myId")
+        let removed = tds.removeSection(with: sectionToRemove?.sectionData?.elementId ?? "")
         XCTAssert(tds.numberOfSections() == 2, "Number of sections must be 2")
-        XCTAssert(sectionToRemove?.sectionData.elementId == removed?.sectionData.elementId, "ElementID of deleted item must match the one of returned item")
+        XCTAssert(sectionToRemove?.sectionData?.elementId == removed?.sectionData?.elementId, "ElementID of deleted item must match the one of returned item")
         
         tds.showSectionHeaders = true
         XCTAssert(tds.section(at: 0)?.showSectionHeaders == true, "When setting showSectionHeaders on a table all sections are set to showSectionHeaders")
@@ -74,12 +74,11 @@ class FFSDataSourceTests: XCTestCase {
     func testAddTableItem() {
         let tds = TableDataSource()
         let sec = tds.addSection()
-        sec.addTableItem(with: CellSourceModel(cellIdentifier: ""))
+        sec.addTableItem(with: CellSourceModel<StandardCell>())
         
-        tds.addTableItem(with: CellSourceModel(
-            cellIdentifier: "",
+        tds.addTableItem(with: CellSourceModel<StandardCell>(
             elementId: "testId",
-            configureTableViewCell: { (cell, model, indexPath) in
+            configureCell: { (cell, model, indexPath) in
                 
         }, onSelect: { (indexPath, model) in
             
@@ -88,10 +87,9 @@ class FFSDataSourceTests: XCTestCase {
         XCTAssert(tds.numberOfSections() == 1, "Number of sections must be 1")
         XCTAssert(tds.numberOfItems(in: 0) == 2, "Number of items must be 2")
         
-        tds.addTableItem(with: CellSourceModel(
-            cellIdentifier: "",
+        tds.addTableItem(with: CellSourceModel<StandardCell>(
             elementId: "testId",
-            configureTableViewCell: { (cell, model, indexPath) in
+            configureCell: { (cell, model, indexPath) in
                 
         }, onSelect: { (indexPath, model) in
             
@@ -99,10 +97,9 @@ class FFSDataSourceTests: XCTestCase {
         XCTAssert(tds.numberOfSections() == 1, "Number of sections must be 1")
         XCTAssert(tds.numberOfItems(in: 0) == 3, "Number of items must be 3")
         
-        tds.addTableItem(with: CellSourceModel(
-            cellIdentifier: "",
+        tds.addTableItem(with: CellSourceModel<StandardCell>(
             elementId: "testId",
-            configureTableViewCell: { (cell, model, indexPath) in
+            configureCell: { (cell, model, indexPath) in
                 
         }, onSelect: { (indexPath, model) in
             
@@ -118,10 +115,9 @@ class FFSDataSourceTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let tds = TableDataSource()
         
-        tds.addTableItem(with: CellSourceModel(
-            cellIdentifier: "",
+        tds.addTableItem(with: CellSourceModel<StandardCell>(
             elementId: "testId",
-            configureTableViewCell: { (cell, model, indexPath) in
+            configureCell: { (cell, model, indexPath) in
                 
         }, onSelect: { (indexPath, model) in
             
@@ -133,7 +129,7 @@ class FFSDataSourceTests: XCTestCase {
     
     func testSelectionCallBack() {
         let output = Output()
-        let tds = dataSourceDummy(with: output)
+        let tds = TestData.dataSourceDummy(with: output)
         XCTAssert(tds.numberOfSections() == 1, "Number of sections must be 1")
         XCTAssert(tds.allItems.count == 12, "All items of dataSourceDummy should be 12")
         
@@ -147,7 +143,7 @@ class FFSDataSourceTests: XCTestCase {
 
     func testDeSelectionCallBack() {
         let output = Output()
-        let tds = dataSourceDummy(with: output)
+        let tds = TestData.dataSourceDummy(with: output)
         guard let item = tds.section(at: 0) else {
             XCTFail()
             return
@@ -158,14 +154,14 @@ class FFSDataSourceTests: XCTestCase {
     
     func testConfigurationCallBack() {
         let output = Output()
-        let tds = dataSourceDummy(with: output)
+        let tds = TestData.dataSourceDummy(with: output)
         let indexPath = IndexPath(row: 2, section: 0)
         guard let item = tds.item(at: indexPath) else {
             XCTFail()
             return
         }
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "NumberCell")
-        item.model.configureTableViewCell?(cell, item.model, indexPath)
+        let cell = NumberCell(style: .default, reuseIdentifier: NumberCell.reuseIdentifier)
+        item.model.configureCell?(cell, item.model, indexPath)
         XCTAssert(cell.textLabel?.text == "1")
     }
     
@@ -173,29 +169,32 @@ class FFSDataSourceTests: XCTestCase {
         // This is an example of a performance test case.
         self.measure {
             let output = Output()
-            let tds = dataSourceDummy(with: output)
+            let tds = TestData.dataSourceDummy(with: output)
             let item = tds.item(at: IndexPath(row: 2, section: 0))
             item?.doSelectionAction()
         }
     }
-    
-    private func dataSourceDummy(with testOutput: TestOutput) -> TableDataSource {
+}
+
+struct TestData {
+    static func dataSourceDummy(with testOutput: TestOutput) -> TableDataSource {
         let dataSource = TableDataSource()
         let section = dataSource.addSection()
         
-        section.addTableItem(with: CellSourceModel(
-            cellIdentifier: "StandardCell",
-            configureTableViewCell: { (cell, model, indexPath) in
-                cell.textLabel?.text = "Cell content"
+        section.addTableItem(with: CellSourceModel<StandardCell>(
+            configureCell: { (cell, model, indexPath) in
+                cell.configure(with: "Cell content")
+                cell.configure(with: 5)
         },
             onSelect: { (indexPath, model) in
                 testOutput.print("Tap on cell \(indexPath.row) of section \(indexPath.section).")
         }))
         
         for number in 0...10 {
-            section.addTableItem(with: CellSourceModel(
-                cellIdentifier: "NumberCell",
-                configureTableViewCell: { (cell, model, indexPath) in
+            section.addTableItem(with: NumberCellModel(
+                customVariable: "CustomString",
+                configureCell: { (cell, model, indexPath) in
+                    cell.textLabel?.text = model.customVariable
                     cell.textLabel?.text = String(number)
             }, onSelect: { (indexPath, model) in
                 testOutput.print("Tap on number \(number) in cell \(indexPath.row) of section \(indexPath.section).")
@@ -206,6 +205,33 @@ class FFSDataSourceTests: XCTestCase {
         return dataSource
     }
     
+}
+
+class StandardCell: UITableViewCell, ReuseIdentifierProvider {
+    static let reuseIdentifier = "StandardCell"
+    func configure(with text: String) {
+        textLabel?.text = text
+    }
+    func configure(with number: Int) {
+        textLabel?.text = String(number)
+    }
+}
+
+class NumberCell: UITableViewCell, ReuseIdentifierProvider {
+    static let reuseIdentifier = "NumberCell"
+}
+
+class NumberCellModel: CellSourceModel<NumberCell> {
+    let customVariable: String
+    init(customVariable: String,
+         configureCell: ((NumberCell, NumberCellModel, IndexPath) -> Void)?=nil,
+         onSelect: CellAction?=nil,
+         onDeselect: CellAction?=nil) {
+        self.customVariable = customVariable
+        super.init(configureCell: configureCell,
+                   onSelect: onSelect,
+                   onDeselect: onDeselect)
+    }
 }
 
 protocol TestOutput {

@@ -33,7 +33,7 @@ extension CollectionViewDataSourceConnector: UICollectionViewDataSource {
             fatalError("TableDataSource: Datasource or model for collectionView \(collectionView) at indexPath \(indexPath) not found")
         }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: model.cellIdentifier, for: indexPath)
-        model.configureCollectionViewCell?(cell, model, indexPath)
+        model.configureCell?(cell, model, indexPath)
         return cell
     }
 }

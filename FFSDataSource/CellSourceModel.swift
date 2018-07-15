@@ -6,7 +6,11 @@
 //  Copyright © 2018 Farbflash. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+public protocol ReuseIdentifierProvider where Self: UIView {
+    static var reuseIdentifier: String { get }
+}
 
 /// This is a 'sample' CellSourceModel. It complies to protocol 'TableDataItemModel'
 /// It can be used or subclassed as a 'starting point' for a cell model
@@ -17,8 +21,8 @@ import Foundation
 /// Your specific use case decides, whether to use your own class/struct or
 /// to subclass this class as your customized model
 ///
-open class CellSourceModel: CollapsableTableDataItemModel, ValidatableTableDataItemModel {
-
+open class CellSourceModel<T: ReuseIdentifierProvider>: CollapsableTableDataItemModel, ValidatableTableDataItemModel {
+    
     /// ID (unique??) of this element as string
     open var elementId: String
 
@@ -37,17 +41,14 @@ open class CellSourceModel: CollapsableTableDataItemModel, ValidatableTableDataI
     /// Closure to execute in order to evaluate the model
     open var evaluation:((_ model: TableDataItemModel) -> Bool)?
 
-    /// Closure to configure the table cell
-    open var configureTableViewCell: TableViewCellConfiguration?
-
-    /// Closure to configure the collectionView cell
-    open var configureCollectionViewCell: CollectionViewCellConfiguration?
+    /// Closure to configure the cell
+    open var configureCell: CellConfiguration?
 
     /// Closure to execute on cell selection
-    open var onSelect: TableItemAction?
+    open var onSelect: CellAction?
 
     /// Closure to execute on cell deselection
-    open var onDeselect: TableItemAction?
+    open var onDeselect: CellAction?
 
     /// fixed cellHeight (leave nil for self sizing cells)
     open var cellHeight: Double?
@@ -55,21 +56,27 @@ open class CellSourceModel: CollapsableTableDataItemModel, ValidatableTableDataI
     /// UITableViewRowAction's that can be applied for cell
     open var rowActions: [UITableViewRowAction]?
 
-    public init(
-        cellIdentifier: String,
+    public init<V: CellSourceModel>(
+        cellIdentifier: String=T.reuseIdentifier,
         elementId: String=UUID().uuidString,
         selected: Bool=false,
         collapsed: Bool=false,
         cellHeight: Double?=nil,
-        configureTableViewCell: TableViewCellConfiguration?=nil,
-        configureCollectionViewCell: CollectionViewCellConfiguration?=nil,
-        onSelect: TableItemAction?=nil,
-        onDeselect: TableItemAction?=nil
+        configureCell: ((T, V, IndexPath) -> Void)?=nil,
+        onSelect: CellAction?=nil,
+        onDeselect: CellAction?=nil
         ) {
         self.cellIdentifier = cellIdentifier
         self.elementId = elementId
-        self.configureTableViewCell = configureTableViewCell
-        self.configureCollectionViewCell = configureCollectionViewCell
+        self.configureCell = { (cell, model, indexPath) in
+            guard let cell = cell as? T else {
+                fatalError("Wrong cell subclass was specified!")
+            }
+            guard let model = model as? V else {
+                fatalError("Model class is wrong!")
+            }
+            configureCell?(cell, model, indexPath)
+        }
         self.selected = selected
         self.collapsed = collapsed
         self.onSelect = onSelect
