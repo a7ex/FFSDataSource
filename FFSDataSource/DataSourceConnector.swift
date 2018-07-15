@@ -1,25 +1,45 @@
 //
-//  TableViewDataSourceConnector.swift
-//  FFSDataSource
+//  DataSourceConnector.swift
+//  TableViewDataSourceTest
 //
-//  Created by Alex da Franca on 03.04.18.
+//  Created by Alex da Franca on 15.07.18.
 //  Copyright © 2018 Farbflash. All rights reserved.
 //
 
 import UIKit
 
-public class TableViewDataSourceConnector: NSObject {
-    private let dataSource: TableDataSource
+public enum ValidationError: Error {
+    case failed(models: [TableDataItemModel])
+}
+
+open class DataSourceConnector: NSObject {
+    public let dataSource: TableDataSource
     
-    public init(with tableDataSource: TableDataSource, in tableView: UITableView) {
+    public init(with tableDataSource: TableDataSource, in tableView: UITableView?) {
         self.dataSource = tableDataSource
         super.init()
-        tableView.delegate = self
-        tableView.dataSource = self
+        tableView?.delegate = self
+        tableView?.dataSource = self
+    }
+    
+    public init(with tableDataSource: TableDataSource, in collectionView: UICollectionView?) {
+        self.dataSource = tableDataSource
+        super.init()
+        collectionView?.delegate = self
+        collectionView?.dataSource = self
     }
 }
 
-extension TableViewDataSourceConnector: UITableViewDataSource {
+public extension DataSourceConnector {
+    public func validateAll() throws {
+        let failed = dataSource.allItems.compactMap { ($0.model as? ValidatableTableDataItemModel)?.evaluate() }
+        if !failed.isEmpty {
+            throw ValidationError.failed(models: failed)
+        }
+    }
+}
+
+extension DataSourceConnector: UITableViewDataSource {
     open func numberOfSections(in tableView: UITableView) -> Int {
         return dataSource.numberOfSections()
     }
@@ -38,7 +58,7 @@ extension TableViewDataSourceConnector: UITableViewDataSource {
     }
 }
 
-extension TableViewDataSourceConnector: UITableViewDelegate {
+extension DataSourceConnector: UITableViewDelegate {
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // for some odd reason I need to make sure being in the main thread here
         // without this, there can be a noticeable delay until the event fires
@@ -111,5 +131,35 @@ extension TableViewDataSourceConnector: UITableViewDelegate {
         }
         model.configureCell?(cell, model, IndexPath(row: 0, section: section))
         return cell.contentView
+    }
+}
+
+extension DataSourceConnector: UICollectionViewDataSource {
+    open func numberOfSections(in collectionView: UICollectionView) -> Int {
+        print("In Baseclass received numberOfSections")
+        return dataSource.numberOfSections()
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return dataSource.numberOfItems(in: section)
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let model = dataSource.model(at: indexPath) else {
+            fatalError("TableDataSource: Datasource or model for collectionView \(collectionView) at indexPath \(indexPath) not found")
+        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: model.cellIdentifier, for: indexPath)
+        model.configureCell?(cell, model, indexPath)
+        return cell
+    }
+}
+
+extension DataSourceConnector: UICollectionViewDelegate {
+    open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        dataSource.selectItem(at: indexPath)
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        dataSource.deselectItem(at: indexPath)
     }
 }

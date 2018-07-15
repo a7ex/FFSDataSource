@@ -8,9 +8,102 @@
 import Foundation
 import UIKit
 
+/// TableDataSource is a class to provide an object for UITableView datasources and delegates
+/// It can be used as model for UITableViews and UICollectionViews, providing cell actions as closures
+
+/// Elements which conform to TableDataItemModel represent an item in the datasource.
+/// You can use either a class or a struct to represent a model.
+/// For your convenience there is a specified baseclass CellSourceModel
+/// to use 'as is' or as a starting point by subclassing or extending.
+public protocol TableDataItemModel {
+    
+    /// The cellReuseIdentifier to be used to dequeue a cell
+    /// - required
+    var cellIdentifier: String { get set }
+    
+    /// Any string to identify the model
+    /// Must not necessarly be unique
+    /// - optional (defaults to unique UUID)
+    var elementId: String { get set }
+    
+    /// Specify a fixed cellheight
+    /// - optional
+    var cellHeight: Double? { get set }
+    
+    /// Closure to execute on selection of the cell
+    /// Provided parameters are: indexPath and model
+    /// - optional
+    var onSelect: CellAction? { get set }
+    
+    /// Closure to execute on deSelection of the cell
+    /// Provided parameters are: indexPath and model
+    /// - optional
+    var onDeselect: CellAction? { get set }
+    
+    /// Closure to execute on creation of the cell (dequeuing from tableView)
+    /// Provided parameters are: cell, model and indexPath
+    /// - optional
+    var configureCell: CellConfiguration? { get set }
+    
+    /// The associated UITableViewRowActions for the cell
+    /// - optional
+    var rowActions: [UITableViewRowAction]? { get set }
+}
+
+/// A specialized type of TableDataItemModel, which supports collapsing.
+/// Elements conforming to this protocol provide information to collapse/expand the cell
+public protocol CollapsableTableDataItemModel: TableDataItemModel {
+    
+    /// The delta of between collapsed and uncollapsed rowHeight
+    /// This is kind of an alternate rowHeight
+    /// - optional (default: 0)
+    var cellExpandHeightDifference: Int { get }
+    
+    /// A boolean flag, whether or not the cell height shall be
+    /// with or without the cellExpandHeightDifference
+    /// - optional (default: false)
+    var collapsed: Bool { get }
+}
+
+/// A specialized type of TableDataItemModel, which supports validation.
+/// Elements conforming to this protocol provide a closure to evaluate the cell content
+public protocol ValidatableTableDataItemModel: TableDataItemModel {
+    
+    /// Closure to execute to validate the model
+    /// Provided parameter is the model
+    /// Must return a boolean
+    /// - optional (default: returns true => model is not validated => success)
+    var onEvaluate: ((_ model: TableDataItemModel) -> Bool) { get }
+    
+    /// Call the onEvaluate closure and return the model in case of failed validation
+    /// or return nil in case of successful validation
+    ///
+    /// - Returns: the receiver, if onEvaluate() returns false, or nil, if onEvaluate() returns true
+    func evaluate() -> ValidatableTableDataItemModel?
+}
+
+public extension ValidatableTableDataItemModel {
+    
+    /// Default implementation of evaluate() function for convenience
+    ///
+    /// - Returns: the receiver, if onEvaluate() returns false, or nil, if onEvaluate() returns true
+    func evaluate() -> ValidatableTableDataItemModel? {
+        return onEvaluate(self) ? nil: self
+    }
+}
+
+/// This Protocol is just used as a Metatype for UITableViewCell and UICollectionViewCell
+public protocol TableOrCollectionViewCell { }
+extension UITableViewCell: TableOrCollectionViewCell { }
+extension UICollectionViewCell: TableOrCollectionViewCell { }
+
+
+public typealias CellAction = (IndexPath, TableDataItemModel) -> Void
+public typealias CellConfiguration = (TableOrCollectionViewCell, TableDataItemModel, IndexPath) -> Void
+
 /**
  TableDataSource is a class to provide an object for UITableView datasources and delegates
- It can be used as MODEL for UITableViews and UICollectionViews, providing cell actions as closures
+ It can be used as model for UITableViews and UICollectionViews, providing cell actions as closures
  
  EXAMPLE:
  ```swift
@@ -27,51 +120,6 @@ import UIKit
  dataSrc.showSectionHeaders = true
  ```
  */
-
-
-fileprivate extension Array {
-    /**
-     Access elements of array without index out of range error
-     
-     This method checks, whether the specified index in the array is within the bounds of the array
-     and if NOT returns a default value, which can also be specified optionally
-     
-     Example:
-     print(myArray.valueAt(index: -2, "Not found"))
-     -- "Not found"
-     
-     - parameter index:        Integer zero-based index of element in array
-     - parameter defaultValue: optional default value to return in case of out of bounds index (default = nil)
-     
-     - returns: element of array at index position OR defaultValue (nil)
-     */
-    func item(at index: Int, defaultValue: Element?=nil) -> Element? {
-        return (index >= 0 && index < count) ? self[index] : defaultValue
-    }
-}
-
-public protocol TableDataItemModel {
-    var cellIdentifier: String { get set }
-    var elementId: String { get set }
-    var cellHeight: Double? { get set }
-    var onSelect: CellAction? { get set }
-    var onDeselect: CellAction? { get set }
-    var configureCell: CellConfiguration? { get set }
-    var rowActions: [UITableViewRowAction]? { get set }
-}
-
-public protocol CollapsableTableDataItemModel: TableDataItemModel {
-    var cellExpandHeightDifference: Int { get }
-    var collapsed: Bool { get }
-}
-
-public protocol ValidatableTableDataItemModel: TableDataItemModel {
-    var evaluation: ((_ model: TableDataItemModel) -> Bool)? { get }
-}
-
-public typealias CellAction = (IndexPath, TableDataItemModel) -> Void
-public typealias CellConfiguration = (UIView, TableDataItemModel, IndexPath) -> Void
-
 open class TableDataSource {
     
     /** @name Properties */
@@ -374,11 +422,7 @@ open class TableDataSource {
      - returns: array with all row items of all sections
      */
     open var allItems: [TableItem] {
-        var itms = [TableItem]()
-        for section in self.sections {
-            itms += section.allItems
-        }
-        return itms
+        return sections.flatMap({ $0.allItems })
     }
     
     /**
@@ -452,7 +496,6 @@ open class TableDataSource {
         private var tableItems = [TableItem]()
         
         deinit {
-//            sectionData = TableSection.defaultModel
             sectionData = nil
             tableItems = [TableItem]()
         }
@@ -647,5 +690,26 @@ open class TableDataSource {
             index = row
             self.section = section
         }
+    }
+}
+
+fileprivate extension Array {
+    /**
+     Access elements of array without index out of range error
+     
+     This method checks, whether the specified index in the array is within the bounds of the array
+     and if NOT returns a default value, which can also be specified optionally
+     
+     Example:
+     print(myArray.valueAt(index: -2, "Not found"))
+     -- "Not found"
+     
+     - parameter index:        Integer zero-based index of element in array
+     - parameter defaultValue: optional default value to return in case of out of bounds index (default = nil)
+     
+     - returns: element of array at index position OR defaultValue (nil)
+     */
+    func item(at index: Int, defaultValue: Element?=nil) -> Element? {
+        return (index >= 0 && index < count) ? self[index] : defaultValue
     }
 }

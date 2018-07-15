@@ -24,7 +24,7 @@ class TableViewDataSourceConnectorTests: XCTestCase {
     func testCreation() {
         let output = Output()
         let tds = TestData.dataSourceDummy(with: output)
-        let coordinator = TableViewDataSourceConnector(with: tds, in: UITableView())
+        let coordinator = DataSourceConnector(with: tds, in: UITableView())
     }
     
 }

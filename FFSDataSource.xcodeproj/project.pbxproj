@@ -8,9 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		FA721A2520F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA721A2420F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift */; };
+		FA721A6820FB7A3300FDD04D /* DataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA721A6720FB7A3300FDD04D /* DataSourceConnector.swift */; };
 		FA7DBB2620F5EC47002E0B54 /* CellSourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */; };
-		FAE1ABC020F32D44003FBAB6 /* TableViewDataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */; };
-		FAE1ABC220F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */; };
 		FAE757C71E6B109100A27C23 /* FFSDataSource.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE757BD1E6B109100A27C23 /* FFSDataSource.framework */; };
 		FAE757CC1E6B109100A27C23 /* FFSDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE757CB1E6B109100A27C23 /* FFSDataSourceTests.swift */; };
 		FAE757CE1E6B109100A27C23 /* FFSDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE757C01E6B109100A27C23 /* FFSDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -29,11 +28,10 @@
 
 /* Begin PBXFileReference section */
 		FA721A2420F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDataSourceConnectorTests.swift; sourceTree = "<group>"; };
+		FA721A6720FB7A3300FDD04D /* DataSourceConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceConnector.swift; sourceTree = "<group>"; };
 		FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellSourceModel.swift; sourceTree = "<group>"; };
 		FA7E72D61E6D32580062671F /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		FA7E72D71E6D32630062671F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewDataSourceConnector.swift; sourceTree = "<group>"; };
-		FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSourceConnector.swift; sourceTree = "<group>"; };
 		FAE757BD1E6B109100A27C23 /* FFSDataSource.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FFSDataSource.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAE757C01E6B109100A27C23 /* FFSDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFSDataSource.h; sourceTree = "<group>"; };
 		FAE757C11E6B109100A27C23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -87,8 +85,7 @@
 			children = (
 				FAE757C01E6B109100A27C23 /* FFSDataSource.h */,
 				FAE757D71E6B10F200A27C23 /* TableDataSource.swift */,
-				FAE1ABBF20F32D44003FBAB6 /* TableViewDataSourceConnector.swift */,
-				FAE1ABC120F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift */,
+				FA721A6720FB7A3300FDD04D /* DataSourceConnector.swift */,
 				FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */,
 				FAE757C11E6B109100A27C23 /* Info.plist */,
 			);
@@ -219,10 +216,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAE1ABC020F32D44003FBAB6 /* TableViewDataSourceConnector.swift in Sources */,
 				FAE757D81E6B10F200A27C23 /* TableDataSource.swift in Sources */,
 				FA7DBB2620F5EC47002E0B54 /* CellSourceModel.swift in Sources */,
-				FAE1ABC220F32D4E003FBAB6 /* CollectionViewDataSourceConnector.swift in Sources */,
+				FA721A6820FB7A3300FDD04D /* DataSourceConnector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
