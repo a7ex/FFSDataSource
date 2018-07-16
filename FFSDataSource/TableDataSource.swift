@@ -75,11 +75,11 @@ public protocol ValidatableTableDataItemModel: TableDataItemModel {
     /// - optional (default: returns true => model is not validated => success)
     var onEvaluate: ((_ model: TableDataItemModel) -> Bool) { get }
     
-    /// Call the onEvaluate closure and return the model in case of failed validation
-    /// or return nil in case of successful validation
+    /// Call the onEvaluate closure and return false in case of failed validation
+    /// or return true in case of successful validation
     ///
-    /// - Returns: the receiver, if onEvaluate() returns false, or nil, if onEvaluate() returns true
-    func evaluate() -> ValidatableTableDataItemModel?
+    /// - Returns: boolean result
+    func evaluate() -> Bool
 }
 
 public extension ValidatableTableDataItemModel {
@@ -87,9 +87,13 @@ public extension ValidatableTableDataItemModel {
     /// Default implementation of evaluate() function for convenience
     ///
     /// - Returns: the receiver, if onEvaluate() returns false, or nil, if onEvaluate() returns true
-    func evaluate() -> ValidatableTableDataItemModel? {
-        return onEvaluate(self) ? nil: self
+    func evaluate() -> Bool {
+        return onEvaluate(self)
     }
+}
+
+public enum ValidationError: Error {
+    case failed(items: [TableDataSource.TableItem])
 }
 
 /// This Protocol is just used as a Metatype for UITableViewCell and UICollectionViewCell
@@ -483,6 +487,23 @@ open class TableDataSource {
      */
     open func deselectItem(at indexPath: IndexPath) {
         section(at: indexPath.section)?.doDeselectionAction(at: indexPath.row)
+    }
+    
+    /// Execute evaluation closure on all items
+    /// Throws an error with an error of failed items
+    ///
+    /// - Throws: ValidationError.failed([TableDataItemModel])
+    open func validateAll() throws {
+        let failed = allItems.filter { (item) -> Bool in
+            guard let model = item.model as? ValidatableTableDataItemModel,
+                !model.evaluate() else {
+                    return false
+            }
+            return true
+        }
+        if !failed.isEmpty {
+            throw ValidationError.failed(items: failed)
+        }
     }
     
     // MARK: - TableSection Class

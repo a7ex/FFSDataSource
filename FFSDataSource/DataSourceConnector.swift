@@ -8,10 +8,6 @@
 
 import UIKit
 
-public enum ValidationError: Error {
-    case failed(models: [TableDataItemModel])
-}
-
 open class DataSourceConnector: NSObject {
     public let dataSource: TableDataSource
     
@@ -32,10 +28,7 @@ open class DataSourceConnector: NSObject {
 
 public extension DataSourceConnector {
     public func validateAll() throws {
-        let failed = dataSource.allItems.compactMap { ($0.model as? ValidatableTableDataItemModel)?.evaluate() }
-        if !failed.isEmpty {
-            throw ValidationError.failed(models: failed)
-        }
+        try dataSource.validateAll()
     }
 }
 
