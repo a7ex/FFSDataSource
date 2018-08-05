@@ -2,8 +2,8 @@
 //  CellSourceModel.swift
 //  FFSDataSource
 //
-//  Created by Alex da Franca on 11.07.18.
-//  Copyright © 2018 Farbflash. All rights reserved.
+//  Created by Alex da Franca
+//  Copyright (c) 2015 Farbflash. All rights reserved.
 //
 
 import UIKit
@@ -60,7 +60,7 @@ open class CellSourceModel<T: ReuseIdentifierProvider>: CollapsableTableDataItem
     open var collapsed: Bool
     
     /// Closure to execute in order to evaluate the model
-    open var onEvaluate: ((_ model: TableDataItemModel) -> Bool)
+    open var onEvaluate: ((_ model: TableDataItemModel) -> [String]?)
     
     /// Closure to configure the cell
     open var configureCell: CellConfiguration?
@@ -86,7 +86,7 @@ open class CellSourceModel<T: ReuseIdentifierProvider>: CollapsableTableDataItem
         configureCell: ((T, V, IndexPath) -> Void)?=nil,
         onSelect: CellAction?=nil,
         onDeselect: CellAction?=nil,
-        onEvaluate: @escaping ((_ model: TableDataItemModel) -> Bool) = { _ in return true }
+        onEvaluate: @escaping ((_ model: TableDataItemModel) -> [String]?) = { _ in return nil }
         ) {
         self.cellIdentifier = cellIdentifier
         self.elementId = elementId
