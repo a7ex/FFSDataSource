@@ -183,7 +183,7 @@ struct TestData {
         
         section.addTableItem(with: CellSourceModel<StandardCell>(
             configureCell: { (cell, model, indexPath) in
-                cell.configure(with: "Cell content")
+//                cell.configure(with: "Cell content")
                 cell.configure(with: 5)
         },
             onSelect: { (indexPath, model) in
