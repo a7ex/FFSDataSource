@@ -25,6 +25,7 @@ class TableViewDataSourceConnectorTests: XCTestCase {
         let output = Output()
         let tds = TestData.dataSourceDummy(with: output)
         let coordinator = DataSourceConnector(with: tds, in: UITableView())
+        XCTAssert(coordinator.dataSource.numberOfSections() == 1)
     }
     
 }
