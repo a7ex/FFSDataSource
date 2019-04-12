@@ -24,8 +24,14 @@ class TableViewDataSourceConnectorTests: XCTestCase {
     func testCreation() {
         let output = Output()
         let tds = TestData.dataSourceDummy(with: output)
-        let coordinator = DataSourceConnector(with: tds, in: UITableView())
-        XCTAssert(coordinator.dataSource.numberOfSections() == 1)
+        let tableView = UITableView()
+        tableView.register(StandardCell.self, forCellReuseIdentifier: StandardCell.reuseIdentifier)
+        tableView.register(NumberCell.self, forCellReuseIdentifier: NumberCell.reuseIdentifier)
+        let coordinator = DataSourceConnector(with: tds, in: tableView)
+        XCTAssert(coordinator.numberOfSections(in: tableView) == 1, "The number of sections should be 1")
+        XCTAssert(coordinator.tableView(tableView, numberOfRowsInSection: 0) == 12, "The number of items should be 12")
+        let cell = coordinator.tableView(tableView, cellForRowAt: IndexPath(item: 0, section: 0))
+        XCTAssert(cell.textLabel?.text == "5", "The text of cell 1 should be '5'")
     }
     
 }

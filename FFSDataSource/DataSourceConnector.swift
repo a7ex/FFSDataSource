@@ -1,9 +1,9 @@
 //
 //  DataSourceConnector.swift
-//  TableViewDataSourceTest
+//  FFSDataSource
 //
-//  Created by Alex da Franca on 15.07.18.
-//  Copyright © 2018 Farbflash. All rights reserved.
+//  Created by Alex da Franca
+//  Copyright (c) 2018 Farbflash. All rights reserved.
 //
 
 import UIKit

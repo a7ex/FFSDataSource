@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA47B3AA2117972D0085B382 /* TableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA47B3A92117972D0085B382 /* TableSection.swift */; };
+		FA47B3AC2117973B0085B382 /* TableItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA47B3AB2117973B0085B382 /* TableItem.swift */; };
+		FA47B3AE211797560085B382 /* TableDataItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA47B3AD211797560085B382 /* TableDataItemModel.swift */; };
 		FA721A2520F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA721A2420F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift */; };
 		FA721A6820FB7A3300FDD04D /* DataSourceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA721A6720FB7A3300FDD04D /* DataSourceConnector.swift */; };
 		FA7DBB2620F5EC47002E0B54 /* CellSourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */; };
@@ -27,6 +30,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FA47B3A92117972D0085B382 /* TableSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSection.swift; sourceTree = "<group>"; };
+		FA47B3AB2117973B0085B382 /* TableItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableItem.swift; sourceTree = "<group>"; };
+		FA47B3AD211797560085B382 /* TableDataItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableDataItemModel.swift; sourceTree = "<group>"; };
 		FA721A2420F869FE00FDD04D /* TableViewDataSourceConnectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDataSourceConnectorTests.swift; sourceTree = "<group>"; };
 		FA721A6720FB7A3300FDD04D /* DataSourceConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceConnector.swift; sourceTree = "<group>"; };
 		FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellSourceModel.swift; sourceTree = "<group>"; };
@@ -60,6 +66,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FA47B3A7211796D00085B382 /* TableDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				FAE757D71E6B10F200A27C23 /* TableDataSource.swift */,
+				FA47B3A92117972D0085B382 /* TableSection.swift */,
+				FA47B3AB2117973B0085B382 /* TableItem.swift */,
+				FA47B3AD211797560085B382 /* TableDataItemModel.swift */,
+			);
+			path = TableDataSource;
+			sourceTree = "<group>";
+		};
+		FA47B3A8211796E50085B382 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				FAE757C01E6B109100A27C23 /* FFSDataSource.h */,
+				FAE757C11E6B109100A27C23 /* Info.plist */,
+			);
+			name = SupportingFiles;
+			sourceTree = "<group>";
+		};
 		FAE757B31E6B109100A27C23 = {
 			isa = PBXGroup;
 			children = (
@@ -83,11 +109,10 @@
 		FAE757BF1E6B109100A27C23 /* FFSDataSource */ = {
 			isa = PBXGroup;
 			children = (
-				FAE757C01E6B109100A27C23 /* FFSDataSource.h */,
-				FAE757D71E6B10F200A27C23 /* TableDataSource.swift */,
+				FA47B3A7211796D00085B382 /* TableDataSource */,
 				FA721A6720FB7A3300FDD04D /* DataSourceConnector.swift */,
 				FA7DBB2520F5EC47002E0B54 /* CellSourceModel.swift */,
-				FAE757C11E6B109100A27C23 /* Info.plist */,
+				FA47B3A8211796E50085B382 /* SupportingFiles */,
 			);
 			path = FFSDataSource;
 			sourceTree = "<group>";
@@ -216,8 +241,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA47B3AC2117973B0085B382 /* TableItem.swift in Sources */,
 				FAE757D81E6B10F200A27C23 /* TableDataSource.swift in Sources */,
 				FA7DBB2620F5EC47002E0B54 /* CellSourceModel.swift in Sources */,
+				FA47B3AE211797560085B382 /* TableDataItemModel.swift in Sources */,
+				FA47B3AA2117972D0085B382 /* TableSection.swift in Sources */,
 				FA721A6820FB7A3300FDD04D /* DataSourceConnector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

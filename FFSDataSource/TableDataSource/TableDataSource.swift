@@ -1,106 +1,58 @@
 //
 //  TableDataSource.swift
+//  FFSDataSource
 //
-//  Created by Alex da Franca on 04/02/17.
+//  Created by Alex da Franca
 //  Copyright (c) 2015 Farbflash. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
-/// TableDataSource is a class to provide an object for UITableView datasources and delegates
-/// It can be used as model for UITableViews and UICollectionViews, providing cell actions as closures
-
-/// Elements which conform to TableDataItemModel represent an item in the datasource.
-/// You can use either a class or a struct to represent a model.
-/// For your convenience there is a specified baseclass CellSourceModel
-/// to use 'as is' or as a starting point by subclassing or extending.
-public protocol TableDataItemModel {
-    
-    /// The cellReuseIdentifier to be used to dequeue a cell
-    /// - required
-    var cellIdentifier: String { get set }
-    
-    /// Any string to identify the model
-    /// Must not necessarly be unique
-    /// - optional (defaults to unique UUID)
-    var elementId: String { get set }
-    
-    /// Specify a fixed cellheight
-    /// - optional
-    var cellHeight: Double? { get set }
-    
-    /// Closure to execute on selection of the cell
-    /// Provided parameters are: indexPath and model
-    /// - optional
-    var onSelect: CellAction? { get set }
-    
-    /// Closure to execute on deSelection of the cell
-    /// Provided parameters are: indexPath and model
-    /// - optional
-    var onDeselect: CellAction? { get set }
-    
-    /// Closure to execute on creation of the cell (dequeuing from tableView)
-    /// Provided parameters are: cell, model and indexPath
-    /// - optional
-    var configureCell: CellConfiguration? { get set }
-    
-    /// The associated UITableViewRowActions for the cell
-    /// - optional
-    var rowActions: [UITableViewRowAction]? { get set }
-}
-
-/// A specialized type of TableDataItemModel, which supports collapsing.
-/// Elements conforming to this protocol provide information to collapse/expand the cell
-public protocol CollapsableTableDataItemModel: TableDataItemModel {
-    
-    /// The delta of between collapsed and uncollapsed rowHeight
-    /// This is kind of an alternate rowHeight
-    /// - optional (default: 0)
-    var cellExpandHeightDifference: Int { get }
-    
-    /// A boolean flag, whether or not the cell height shall be
-    /// with or without the cellExpandHeightDifference
-    /// - optional (default: false)
-    var collapsed: Bool { get }
-}
-
-/// A specialized type of TableDataItemModel, which supports validation.
-/// Elements conforming to this protocol provide a closure to evaluate the cell content
-public protocol ValidatableTableDataItemModel: TableDataItemModel {
-    
-    /// Closure to execute to validate the model
-    /// Provided parameter is the model
-    /// Must return a boolean
-    /// - optional (default: returns true => model is not validated => success)
-    var onEvaluate: ((_ model: TableDataItemModel) -> Bool) { get }
-    
-    /// Call the onEvaluate closure and return false in case of failed validation
-    /// or return true in case of successful validation
-    ///
-    /// - Returns: boolean result
-    func evaluate() -> Bool
-}
-
-public extension ValidatableTableDataItemModel {
-    
-    /// Default implementation of evaluate() function for convenience
-    ///
-    /// - Returns: the receiver, if onEvaluate() returns false, or nil, if onEvaluate() returns true
-    func evaluate() -> Bool {
-        return onEvaluate(self)
+extension Array {
+    /**
+     Access elements of array without index out of range error
+     
+     This method checks, whether the specified index in the array is within the bounds of the array
+     and if NOT returns a default value, which can also be specified optionally
+     
+     Example:
+     print(myArray.valueAt(index: -2, "Not found"))
+     -- "Not found"
+     
+     - parameter index:        Integer zero-based index of element in array
+     - parameter defaultValue: optional default value to return in case of out of bounds index (default = nil)
+     
+     - returns: element of array at index position OR defaultValue (nil)
+     */
+    func item(at index: Int, defaultValue: Element?=nil) -> Element? {
+        return (index >= 0 && index < count) ? self[index] : defaultValue
     }
 }
 
+/// An error type for errors, which are thrown when validating all items
+/// and which store an array of failed items in an associated value
+///
+/// - failed: array with TableItem objects, which failed the validation
 public enum ValidationError: Error {
+    case unknown
     case failed(items: [TableDataSource.TableItem])
+}
+
+/// An element which implements updateVisibility()
+/// Typically this is a subclass of this class which provides Form support
+public protocol CanUpdateItemVisibility {
+
+    /// Compute which indexPaths to add/remove from the tableView
+    /// Typically by examining the item visibility
+    ///
+    /// - Returns: One array with indexPaths to add to the table and one array with indexPaths to remove from the tableView
+    func updateVisibility() -> (add: [IndexPath], remove: [IndexPath])
 }
 
 /// This Protocol is just used as a Metatype for UITableViewCell and UICollectionViewCell
 public protocol TableOrCollectionViewCell { }
 extension UITableViewCell: TableOrCollectionViewCell { }
 extension UICollectionViewCell: TableOrCollectionViewCell { }
-
 
 public typealias CellAction = (IndexPath, TableDataItemModel) -> Void
 public typealias CellConfiguration = (TableOrCollectionViewCell, TableDataItemModel, IndexPath) -> Void
@@ -222,7 +174,7 @@ open class TableDataSource {
      */
     @discardableResult
     open func addSection(with sectionData: TableDataItemModel?=nil, atIndex index: Int?=nil) -> TableSection {
-        var cnt = sections.count
+        let cnt = sections.count
         var newIndex = cnt
         
         if let index = index { // just append at the end if nil
@@ -240,10 +192,7 @@ open class TableDataSource {
         
         newSection.showSectionHeaders = showSectionHeaders
         
-        cnt = sections.count
-        for i in (newIndex + 1)..<cnt {
-            sections[i].index = i
-        }
+        reindexSections()
         return newSection
     }
     
@@ -267,9 +216,7 @@ open class TableDataSource {
         }
         sections.insert(section, at: newIndex)
         
-        for i in (newIndex + 1)..<sections.count {
-            sections[i].index = i
-        }
+        reindexSections()
     }
     
     /**
@@ -279,9 +226,7 @@ open class TableDataSource {
     open func remove(_ section: TableSection) {
         sections.remove(at: section.index)
         
-        for i in 0..<sections.count {
-            sections[i].index = i
-        }
+        reindexSections()
     }
     
     /**
@@ -293,9 +238,7 @@ open class TableDataSource {
             let thisItem = sections[i]
             if thisItem.sectionData?.elementId == elementId {
                 sections.remove(at: i)
-                for i in 0..<sections.count {
-                    sections[i].index = i
-                }
+                reindexSections()
                 return thisItem
             }
         }
@@ -308,7 +251,8 @@ open class TableDataSource {
      - returns: section object of class TableDataSource.TableSection with title 'title' or nil
      */
     open func section(at index: Int) -> TableSection? {
-        return sections.item(at: index)
+        let visibleSections = sections.filter { $0.visible }
+        return visibleSections.item(at: index)
     }
     
     /**
@@ -324,9 +268,10 @@ open class TableDataSource {
      reindex items
      */
     open func reIndexItems() {
-        for i in 0..<sections.count {
-            sections[i].index = i
-            sections[i].reIndexItems()
+        let visibleSections = sections.filter { $0.visible }
+        for i in 0..<visibleSections.count {
+            visibleSections[i].index = i
+            visibleSections[i].reIndexItems()
         }
     }
     
@@ -344,7 +289,7 @@ open class TableDataSource {
      - returns: NSInteger
      */
     open func numberOfSections() -> Int {
-        return sections.count
+        return sections.filter({ $0.visible }).count
     }
     
     /**
@@ -360,7 +305,8 @@ open class TableDataSource {
      - returns: NSInteger
      */
     open func numberOfItems(in section: Int) -> Int {
-        return sections.item(at: section)?.numberOfTableItems ?? 0
+        let visibleSections = sections.filter { $0.visible }
+        return visibleSections.item(at: section)?.numberOfTableItems ?? 0
     }
     
     /** @name Get properties of sections and items */
@@ -372,11 +318,12 @@ open class TableDataSource {
      - returns: the title of the section as string OR nil
      */
     open func sectionData(for section: Int) -> TableDataItemModel? {
-        guard sections.count > section,
-            sections[section].showSectionHeaders else {
+        let visibleSections = sections.filter { $0.visible }
+        guard visibleSections.count > section,
+            visibleSections[section].showSectionHeaders else {
                 return nil
         }
-        return sections[section].sectionData
+        return visibleSections[section].sectionData
     }
     
     /**
@@ -389,8 +336,9 @@ open class TableDataSource {
      - returns: The height of the row item
      */
     open func itemHeight(at indexPath: IndexPath) -> CGFloat {
-        guard sections.count > indexPath.section else { return CGFloat(0.0) }
-        return sections[indexPath.section].itemHeight(at: indexPath.row)
+        let visibleSections = sections.filter { $0.visible }
+        guard visibleSections.count > indexPath.section else { return CGFloat(0.0) }
+        return visibleSections[indexPath.section].itemHeight(at: indexPath.row)
     }
     
     /**
@@ -426,7 +374,16 @@ open class TableDataSource {
      - returns: array with all row items of all sections
      */
     open var allItems: [TableItem] {
-        return sections.flatMap({ $0.allItems })
+        return sections.flatMap { $0.allItems }
+    }
+    
+    /**
+     Get all items of all sections
+     - returns: array with all row items of all sections
+     */
+    open var allVisibleItems: [TableItem] {
+        let visibleSections = sections.filter { $0.visible }
+        return visibleSections.flatMap { $0.allItems }
     }
     
     /**
@@ -494,10 +451,11 @@ open class TableDataSource {
     ///
     /// - Throws: ValidationError.failed([TableDataItemModel])
     open func validateAll() throws {
-        let failed = allItems.filter { (item) -> Bool in
-            guard let model = item.model as? ValidatableTableDataItemModel,
-                !model.evaluate() else {
-                    return false
+        let failed = allVisibleItems.filter { (item) -> Bool in
+            guard item.visible == true,
+                let model = item.model as? ValidatableTableDataItemModel,
+                model.evaluate() != nil else {
+                return false
             }
             return true
         }
@@ -506,231 +464,26 @@ open class TableDataSource {
         }
     }
     
-    // MARK: - TableSection Class
-    
-    open class TableSection {
-        open var showSectionHeaders = false
-        open var showSectionFooters = false
-        open var sectionData: TableDataItemModel?
-        open var index = 0
-        
-        private var tableItems = [TableItem]()
-        
-        deinit {
-            sectionData = nil
-            tableItems = [TableItem]()
-        }
-        
-        public init(with sectionData: TableDataItemModel?=nil, at index: Int?=nil) {
-            self.sectionData = sectionData
-            if let index = index {
-                self.index = index
-            } else {
-                self.index = tableItems.count - 1
+    /// Execute evaluation closure on all items, until the first fails
+    /// Throws an error with an error with the first failed item
+    ///
+    /// - Throws: ValidationError.failed([TableDataItemModel])
+    open func validate() throws {
+        for item in allVisibleItems {
+            guard item.visible == true,
+                let model = item.model as? ValidatableTableDataItemModel,
+                model.evaluate() != nil else {
+                    continue
             }
-        }
-        
-        /**
-         Create, add and return a new table cell source
-         
-         - parameter model:  Any object to act as "payload"
-         - parameter index:  optional index to insert this item to (if nil, the item will be appended to the end of the item list)
-         - parameter action: closure to be executed on table cell selection AND deselection!
-         
-         - returns: the newly created TableDataSource.TableItem, so that it can be further configured, if necessary
-         */
-        @discardableResult
-        open func addTableItem(with model: TableDataItemModel) -> TableItem {
-            let newIndex = tableItems.count
-            let newItem = TableItem(with: model, at: tableItems.count, inSection: self.index)
-            tableItems.insert(newItem, at: newIndex)
-            
-            for i in (newIndex + 1)..<tableItems.count {
-                tableItems[i].index = i
-            }
-            return newItem
-        }
-        
-        /**
-         Does the same as the above method, except, that it returns self in order to chain item creation
-         
-         Example:
-         let dataSrc = TableDataSource()
-         dataSrc.addSection("First section")
-         .addTableItemInChain "First item in section 1")
-         .addTableItemInChain "Second item in section 1")
-         .addTableItemInChain "Third item in section 1")
-         dataSrc.showSectionHeaders = true
-         
-         - parameter model:  Any object to act as "payload"
-         - parameter index:  optional index to insert this item to (if nil, the item will be appended to the end of the item list)
-         - parameter action: optional closure to be executed on table cell selection AND deselection!
-         
-         - returns: returns an instance of self, so that cell creation can be chained
-         */
-        @discardableResult
-        open func addTableItemInChain(with model: TableDataItemModel) -> TableSection {
-            addTableItem(with: model)
-            return self
-        }
-        
-        /**
-         Adds an already existsing TableItem to the section
-         
-         - parameter newItem: an instance of TableDataSource.TableItem
-         - parameter index:   optional index to insert this item to (if nil, the item will be appended to the end of the item list)
-         */
-        open func insert(_ item: TableItem, at index: Int?=nil) {
-            let cnt = tableItems.count
-            var newIndex = cnt
-            
-            if let index = index { // just append at the end if nil
-                // there is no point of filling in items here, that's a pilot error
-                if cnt < index {
-                    #if DEBUG
-                    fatalError("FFSDataSource: Trying to insert tableItem at index \(index), but tableItems.count is \(cnt)")
-                    #else
-                    return
-                    #endif
-                }
-                newIndex = index
-            }
-            
-            var item = item
-            item.updateIndexPath(row: newIndex, section: self.index)
-            tableItems.insert(item, at: newIndex)
-            
-            for i in (newIndex + 1)..<tableItems.count {
-                tableItems[i].index = i
-            }
-        }
-        
-        /**
-         Remove all items in section
-         */
-        open func removeAllItems() {
-            tableItems = [TableItem]()
-        }
-        
-        /**
-         Get all items in section as array
-         */
-        open var allItems: [TableItem] {
-            return tableItems
-        }
-        
-        func reIndexItems() {
-            for i in 0..<tableItems.count {
-                tableItems[i].section = index
-                tableItems[i].index = i
-            }
-        }
-        
-        open var numberOfTableItems: Int {
-            return tableItems.count
-        }
-        
-        open func itemHeight(at index: Int) -> CGFloat {
-            return item(at: index)?.cellheight ?? CGFloat(0)
-        }
-        
-        open func item(at index: Int) -> TableItem? {
-            return tableItems.item(at: index)
-        }
-        
-        @discardableResult
-        open func removeItem(at index: Int) -> TableItem? {
-            guard let retval = tableItems.item(at: index) else { return nil }
-            tableItems.remove(at: index)
-            reIndexItems()
-            return retval
-        }
-        
-        open func model(at index: Int) -> TableDataItemModel? {
-            return item(at: index)?.model
-        }
-        
-        @discardableResult
-        open func removeItem(with elementId: String) -> TableItem? {
-            for i in stride(from: (tableItems.count - 1), through: 0, by: -1) {
-                let thisItem = tableItems[i]
-                if thisItem.model.elementId == elementId {
-                    tableItems.remove(at: i)
-                    reIndexItems()
-                    return thisItem
-                }
-            }
-            return nil
-        }
-        
-        func doSelectionAction(at index: Int) {
-            tableItems.item(at: index)?.doSelectionAction()
-        }
-        
-        func doDeselectionAction(at index: Int) {
-            tableItems.item(at: index)?.doDeselectionAction()
+            throw ValidationError.failed(items: [item])
         }
     }
     
-    // MARK: - TableItem Class
     
-    public struct TableItem {
-        public var model: TableDataItemModel
-        public var index: Int = 0
-        public var section: Int = 0
-        public var cellheight: CGFloat = 0.0
-        
-        public init(with model: TableDataItemModel,
-                    at index: Int?=nil,
-                    inSection section: Int?=nil) {
-            self.model = model
-            if let section = section {
-                self.section = section
-            }
-            if let index = index {
-                self.index = index
-            }
-            if let cHeight = model.cellHeight {
-                cellheight = CGFloat(cHeight)
-            }
+    private final func reindexSections() {
+        let visibleSections = sections.filter { $0.visible }
+        for i in 0..<visibleSections.count {
+            sections[i].index = i
         }
-        
-        public func getIndexPath() -> IndexPath {
-            return IndexPath(row: index, section: section)
-        }
-        
-        public func doSelectionAction() {
-            model.onSelect?(getIndexPath(), model)
-        }
-        
-        public func doDeselectionAction() {
-            model.onDeselect?(getIndexPath(), model)
-        }
-        
-        mutating func updateIndexPath(row: Int, section: Int) {
-            index = row
-            self.section = section
-        }
-    }
-}
-
-fileprivate extension Array {
-    /**
-     Access elements of array without index out of range error
-     
-     This method checks, whether the specified index in the array is within the bounds of the array
-     and if NOT returns a default value, which can also be specified optionally
-     
-     Example:
-     print(myArray.valueAt(index: -2, "Not found"))
-     -- "Not found"
-     
-     - parameter index:        Integer zero-based index of element in array
-     - parameter defaultValue: optional default value to return in case of out of bounds index (default = nil)
-     
-     - returns: element of array at index position OR defaultValue (nil)
-     */
-    func item(at index: Int, defaultValue: Element?=nil) -> Element? {
-        return (index >= 0 && index < count) ? self[index] : defaultValue
     }
 }
