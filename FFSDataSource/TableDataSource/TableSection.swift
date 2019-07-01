@@ -21,7 +21,12 @@ public extension TableDataSource {
         
         // compatibility with older version, where "headerData" was "sectionData"
         public var sectionData: TableDataItemModel? {
-            return headerData
+            get {
+                return headerData
+            }
+            set {
+                headerData = newValue
+            }
         }
         
         private var tableItems = [TableItem]()
