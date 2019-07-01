@@ -173,7 +173,7 @@ open class TableDataSource {
      - returns: newly created section object of class TableDataSource.TableSection
      */
     @discardableResult
-    open func addSection(with sectionData: TableDataItemModel?=nil, atIndex index: Int?=nil) -> TableSection {
+    open func addSection(with headerData: TableDataItemModel?=nil, footerData: TableDataItemModel?=nil, atIndex index: Int?=nil) -> TableSection {
         let cnt = sections.count
         var newIndex = cnt
         
@@ -187,7 +187,7 @@ open class TableDataSource {
             newIndex = index
         }
         
-        let newSection = TableSection(with: sectionData, at: newIndex)
+        let newSection = TableSection(with: headerData, footerData: footerData, at: newIndex)
         sections.insert(newSection, at: newIndex)
         
         newSection.showSectionHeaders = showSectionHeaders
@@ -236,7 +236,12 @@ open class TableDataSource {
     open func removeSection(with elementId: String) -> TableSection? {
         for i in stride(from: (sections.count - 1), through: 0, by: -1) {
             let thisItem = sections[i]
-            if thisItem.sectionData?.elementId == elementId {
+            if thisItem.headerData?.elementId == elementId {
+                sections.remove(at: i)
+                reindexSections()
+                return thisItem
+            }
+            if thisItem.footerData?.elementId == elementId {
                 sections.remove(at: i)
                 reindexSections()
                 return thisItem
@@ -261,7 +266,10 @@ open class TableDataSource {
      - returns: section object of class TableDataSource.TableSection with title 'title' or nil
      */
     open func section(with elementId: String) -> TableSection? {
-        return sections.first(where: { $0.sectionData?.elementId == elementId })
+        if let matchingHeader = sections.first(where: { $0.headerData?.elementId == elementId }) {
+            return matchingHeader
+        }
+        return sections.first(where: { $0.footerData?.elementId == elementId })
     }
     
     /**
@@ -323,7 +331,7 @@ open class TableDataSource {
             visibleSections[section].showSectionHeaders else {
                 return nil
         }
-        return visibleSections[section].sectionData
+        return visibleSections[section].headerData
     }
     
     /**

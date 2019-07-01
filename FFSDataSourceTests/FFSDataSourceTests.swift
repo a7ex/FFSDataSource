@@ -62,10 +62,10 @@ class FFSDataSourceTests: XCTestCase {
             XCTAssert(tds.numberOfSections() == 3, "Number of sections must be 3")
         }
         let sectionToRemove = tds.section(at: 1)
-        sectionToRemove?.sectionData = CellSourceModel<StandardCell>(elementId: "myId")
-        let removed = tds.removeSection(with: sectionToRemove?.sectionData?.elementId ?? "")
+        sectionToRemove?.headerData = CellSourceModel<StandardCell>(elementId: "myId")
+        let removed = tds.removeSection(with: sectionToRemove?.headerData?.elementId ?? "")
         XCTAssert(tds.numberOfSections() == 2, "Number of sections must be 2")
-        XCTAssert(sectionToRemove?.sectionData?.elementId == removed?.sectionData?.elementId, "ElementID of deleted item must match the one of returned item")
+        XCTAssert(sectionToRemove?.headerData?.elementId == removed?.headerData?.elementId, "ElementID of deleted item must match the one of returned item")
         
         tds.showSectionHeaders = true
         XCTAssert(tds.section(at: 0)?.showSectionHeaders == true, "When setting showSectionHeaders on a table all sections are set to showSectionHeaders")

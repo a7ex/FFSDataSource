@@ -14,19 +14,26 @@ public extension TableDataSource {
     open class TableSection {
         open var showSectionHeaders = false
         open var showSectionFooters = false
-        open var sectionData: TableDataItemModel?
+        open var headerData: TableDataItemModel?
+        open var footerData: TableDataItemModel?
         open var index = 0
         open var visible = true
-
+        
+        // compatibility with older version, where "headerData" was "sectionData"
+        public var sectionData: TableDataItemModel? {
+            return headerData
+        }
+        
         private var tableItems = [TableItem]()
         
         deinit {
-            sectionData = nil
+            headerData = nil
+            footerData = nil
             tableItems = [TableItem]()
         }
         
-        public init(with sectionData: TableDataItemModel?=nil, at index: Int?=nil) {
-            self.sectionData = sectionData
+        public init(with headerData: TableDataItemModel?=nil, footerData: TableDataItemModel?=nil, at index: Int?=nil) {
+            self.headerData = headerData
             if let index = index {
                 self.index = index
             } else {
@@ -48,7 +55,7 @@ public extension TableDataSource {
             let newIndex = tableItems.count
             let newItem = TableItem(with: model, at: tableItems.count, inSection: self.index)
             tableItems.insert(newItem, at: newIndex)
-
+            
             reIndexItems()
             return newItem
         }
@@ -97,7 +104,7 @@ public extension TableDataSource {
                 }
                 newIndex = index
             }
-
+            
             tableItems.insert(item, at: newIndex)
             reIndexItems()
         }
@@ -115,14 +122,14 @@ public extension TableDataSource {
         open var allItems: [TableItem] {
             return tableItems
         }
-
+        
         /**
          Get all visible items in section as array
          */
         open var allVisibleItems: [TableItem] {
             return tableItems.filter { $0.visible }
         }
-
+        
         func reIndexItems() {
             let visibleItems = allVisibleItems
             for i in 0..<visibleItems.count {

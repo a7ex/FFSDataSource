@@ -27,7 +27,7 @@ open class DataSourceConnector: NSObject {
 }
 
 public extension DataSourceConnector {
-    public func validateAll() throws {
+    func validateAll() throws {
         try dataSource.validateAll()
     }
 }
@@ -77,13 +77,13 @@ extension DataSourceConnector: UITableViewDelegate {
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let model = dataSource.model(at: indexPath) else {
-            return UITableViewAutomaticDimension
+            return UITableView.automaticDimension
         }
         let cellHeight: CGFloat
         if let rowHeight = model.cellHeight {
             cellHeight = CGFloat(rowHeight)
         } else {
-            cellHeight = UITableViewAutomaticDimension
+            cellHeight = UITableView.automaticDimension
         }
         if let model = model as? CollapsableTableDataItemModel,
             model.cellExpandHeightDifference > 0,
@@ -94,36 +94,65 @@ extension DataSourceConnector: UITableViewDelegate {
     }
     
     open func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        guard let section = dataSource.section(at: section),
-            section.showSectionHeaders == true else {
-                return 0
-        }
-        guard let headerHeight = section.sectionData?.cellHeight else {
-            return tableView.sectionHeaderHeight
-        }
-        return CGFloat(headerHeight)
+        return headerHeight(for: dataSource.section(at: section), fallbackHeight: tableView.sectionHeaderHeight)
     }
     
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard let sectionObj = dataSource.section(at: section),
-            sectionObj.showSectionHeaders else {
-                return CGFloat(0)
-        }
-        guard let headerHeight = sectionObj.sectionData?.cellHeight else {
-            return tableView.sectionHeaderHeight
-        }
-        return CGFloat(headerHeight)
+        return headerHeight(for: dataSource.section(at: section), fallbackHeight: tableView.sectionHeaderHeight)
     }
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let sectionObj = dataSource.section(at: section),
             sectionObj.showSectionHeaders == true,
-            let model = sectionObj.sectionData,
+            let model = sectionObj.headerData,
             let cell = tableView.dequeueReusableCell(withIdentifier: model.cellIdentifier) else {
                 return nil
         }
         model.configureCell?(cell, model, IndexPath(row: 0, section: section))
         return cell.contentView
+    }
+    
+    open func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return footerHeight(for: dataSource.section(at: section), fallbackHeight: tableView.sectionFooterHeight)
+    }
+    
+    open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return footerHeight(for: dataSource.section(at: section), fallbackHeight: tableView.sectionFooterHeight)
+    }
+    
+    open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard let sectionObj = dataSource.section(at: section),
+            sectionObj.showSectionHeaders == true,
+            let model = sectionObj.footerData,
+            let cell = tableView.dequeueReusableCell(withIdentifier: model.cellIdentifier) else {
+                return nil
+        }
+        model.configureCell?(cell, model, IndexPath(row: 0, section: section))
+        return cell.contentView
+    }
+    
+    //MARK: - Private interface
+    
+    private func headerHeight(for section: TableDataSource.TableSection?, fallbackHeight: CGFloat) -> CGFloat {
+        guard let section = section,
+            section.showSectionHeaders else {
+                return CGFloat(0)
+        }
+        guard let headerHeight = section.headerData?.cellHeight else {
+            return fallbackHeight
+        }
+        return CGFloat(headerHeight)
+    }
+    
+    private func footerHeight(for section: TableDataSource.TableSection?, fallbackHeight: CGFloat) -> CGFloat {
+        guard let section = section,
+            section.showSectionFooters else {
+                return CGFloat(0)
+        }
+        guard let footerHeight = section.footerData?.cellHeight else {
+            return fallbackHeight
+        }
+        return CGFloat(footerHeight)
     }
 }
 
