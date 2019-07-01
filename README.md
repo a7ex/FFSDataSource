@@ -52,22 +52,22 @@ class SimpleTableController: UIViewController {
         let dataSource = TableDataSource()
         let section = dataSource.addSection()
 
-        section.addTableItem(with: CellSourceModel(
+        section.addTableItem(with: CellSourceModel<UITableViewCell>(
             cellIdentifier: "StandardCell",
             configureCell: { (cell, model, indexPath) in
                 cell.textLabel?.text = "Cell content"
         },
-            onSelect: { (indexPath) in
+            onSelect: { (indexPath, model) in
                 print("Tap on cell \(indexPath.row) of section \(indexPath.section).")
         }))
 
         for number in 0...10 {
-            section.addTableItem(with: CellSourceModel(
+            section.addTableItem(with: CellSourceModel<UITableViewCell>(
                 cellIdentifier: "NumberCell",
                 configureCell: { (cell, model, indexPath) in
                     cell.textLabel?.text = String(number)
             },
-                onSelect: { (indexPath) in
+                onSelect: { (indexPath, model) in
                     print("Tap on number \(number) in cell \(indexPath.row) of section \(indexPath.section).")
             }))
         }

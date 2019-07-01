@@ -21,6 +21,9 @@ public protocol ReuseIdentifierProvider where Self: UIView {
 /// NOTE: these are only necessary, if you didn't define the reuseIdentifier for your
 ///       prototype cells in the storyboard
 public extension ReuseIdentifierProvider {
+    static var reuseIdentifier: String {
+        return String(describing: self)
+    }
     static func register(cellClass: AnyClass, in tableView: UITableView) {
         tableView.register(cellClass, forCellReuseIdentifier: Self.reuseIdentifier)
     }
@@ -28,6 +31,11 @@ public extension ReuseIdentifierProvider {
         collectionView.register(cellClass, forCellWithReuseIdentifier: Self.reuseIdentifier)
     }
 }
+
+/// Since now the "ReuseIdentifierProvider" protocol extension implements the requirement for the "ReuseIdentifierProvider" protocol
+/// We can have the standard UITableViewCell conform to "ReuseIdentifierProvider".
+/// Its reuseIdentifier will be its class name "UITableViewCell"
+extension UITableViewCell: ReuseIdentifierProvider {}
 
 /// This is a 'sample' CellSourceModel. It complies to protocol 'TableDataItemModel'
 /// It can be used or subclassed as a 'starting point' for a cell model
