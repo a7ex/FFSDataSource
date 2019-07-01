@@ -207,7 +207,7 @@ struct TestData {
     
 }
 
-class StandardCell: UITableViewCell, ReuseIdentifierProvider {
+class StandardCell: UITableViewCell {
     static let reuseIdentifier = "StandardCell"
     func configure(with text: String) {
         textLabel?.text = text
@@ -217,7 +217,7 @@ class StandardCell: UITableViewCell, ReuseIdentifierProvider {
     }
 }
 
-class NumberCell: UITableViewCell, ReuseIdentifierProvider {
+class NumberCell: UITableViewCell {
     static let reuseIdentifier = "NumberCell"
 }
 
