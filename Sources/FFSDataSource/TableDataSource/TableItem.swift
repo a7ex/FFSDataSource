@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Farbflash. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// TableItem
 /// A single item of a TableSection object

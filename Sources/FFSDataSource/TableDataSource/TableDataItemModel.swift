@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Farbflash. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// Elements which conform to TableDataItemModel represent an item in the datasource.
 /// You can use either a class or a struct to represent a model.

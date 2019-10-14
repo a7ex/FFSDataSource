@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Farbflash. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// TableSection
 /// A single section of a TableDataSource object
